@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Building WebRTC for iOS/macOS with Xcode | iOS Engineering</title>
+<meta name="keywords" content="">
+<meta name="description" content="Introduction WebRTC (Web Real-Time Communication) is a powerful open-source technology that enables real-time communication capabilities in web and mobile applications. While WebRTC is well-supported in web browsers, incorporating it into iOS applications often requires (re)building a binary framework to ensure seamless integration and improved performance. In this article, we will provide a comprehensive step-by-step guide on how to integrate WebRTC into any iOS/macOS application and building it from source entirely in Xcode.">
+<meta name="author" content="">
+<link rel="canonical" href="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/main/">
+<link crossorigin="anonymous" href="/ios-eng/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/ios-eng/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ronnyf.github.io/ios-eng/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ronnyf.github.io/ios-eng/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ronnyf.github.io/ios-eng/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ronnyf.github.io/ios-eng/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ronnyf.github.io/ios-eng/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Building WebRTC for iOS/macOS with Xcode" />
+<meta property="og:description" content="Introduction WebRTC (Web Real-Time Communication) is a powerful open-source technology that enables real-time communication capabilities in web and mobile applications. While WebRTC is well-supported in web browsers, incorporating it into iOS applications often requires (re)building a binary framework to ensure seamless integration and improved performance. In this article, we will provide a comprehensive step-by-step guide on how to integrate WebRTC into any iOS/macOS application and building it from source entirely in Xcode." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/main/" /><meta property="og:image" content="https://ronnyf.github.io/ios-eng"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-08-20T18:00:00-07:00" />
+<meta property="article:modified_time" content="2023-08-20T18:00:00-07:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://ronnyf.github.io/ios-eng"/>
+
+<meta name="twitter:title" content="Building WebRTC for iOS/macOS with Xcode"/>
+<meta name="twitter:description" content="Introduction WebRTC (Web Real-Time Communication) is a powerful open-source technology that enables real-time communication capabilities in web and mobile applications. While WebRTC is well-supported in web browsers, incorporating it into iOS applications often requires (re)building a binary framework to ensure seamless integration and improved performance. In this article, we will provide a comprehensive step-by-step guide on how to integrate WebRTC into any iOS/macOS application and building it from source entirely in Xcode."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Posts",
+      "item": "https://ronnyf.github.io/ios-eng/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "",
+      "item": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "Building WebRTC for iOS/macOS with Xcode",
+      "item": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/main/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Building WebRTC for iOS/macOS with Xcode",
+  "name": "Building WebRTC for iOS\/macOS with Xcode",
+  "description": "Introduction WebRTC (Web Real-Time Communication) is a powerful open-source technology that enables real-time communication capabilities in web and mobile applications. While WebRTC is well-supported in web browsers, incorporating it into iOS applications often requires (re)building a binary framework to ensure seamless integration and improved performance. In this article, we will provide a comprehensive step-by-step guide on how to integrate WebRTC into any iOS/macOS application and building it from source entirely in Xcode.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Introduction WebRTC (Web Real-Time Communication) is a powerful open-source technology that enables real-time communication capabilities in web and mobile applications. While WebRTC is well-supported in web browsers, incorporating it into iOS applications often requires (re)building a binary framework to ensure seamless integration and improved performance. In this article, we will provide a comprehensive step-by-step guide on how to integrate WebRTC into any iOS/macOS application and building it from source entirely in Xcode.\nWait! What? Why?\nBut one can build this easily as a framework with Google’s depot tools, you might say. That is entirely correct. It might even be more convenient to run someone’s clever build script, grab your favorite (non)cafeinated drink and voila. But what if maybe there’s another way?\nMotivation The main motiviation for this endeavor is to create the ability for developers to not only live-debug into the framework with familiar tools (Xcode, Instruments) but to also build a greater variety of targets. This then opens up a lot more opportunities to optimize and modernize some parts of WebRTC for iOS. With Swift-C++ interopability coming with the Swift 5.9 toolchain, some very interesting engineering might happen that could yield benefits not only for Apple platforms. Let’s get started.\nCreating an Xcode project for WebRTC A basic familiarity with Xcode and how to create projects, targets and their basic configuration is assumed.\nThe final product is available in this github respsitory\nObtaining the sources Refer to Google’s instructions for fetching the WebRTC sources. At the time of writing this, the full sync would take around 20 GB of disk space. In contrast, the “Built-With-Xcode” variant occupies 788 MB.\nCreating the targets While Google’s build configuration defines several dozens of individual targets that are very neatly organized into an efficient dependency graph, this is not something that is going to be replicated for the Xcode build. The build graph is something that Xcode manages internally. Rather than taking on those responsibilities manually, Xcode is entrusted with this. Please refer to the paragraph about build performance for a breakdown of build times of Xcode and Ninja.\nThe targets that are being created are the following:\nWebRTC (framework) libWebRTC (static library) CoreRTC (static library) CoreRTC The CoreRTC static library will contain all objects (minus the unit tests and mock objects) from the following folders:\napi audio call common_audio common_video logging media modules net p2p pc resources rtc_base rtc_tools stats system_wrappers test testing third_party* video All Source Files\nGoogle engineers follow the pattern of storing header files near the location of the source files and refer to them by thir relative path to the source root. There should be a name for this 🤷‍♂️.\nSetting the User Header Search Paths to $(SRCROOT) in Xcode’s Build Settings.\nUSER_HEADER_SEARCH_PATHS = $(SRCROOT) libWebRTC The static WebRTC library links the CoreRTC static library and builds the following sources.\nAll Source Files\nAdditionally, the public headers need to be made available for other libraries to link this one. This is achieved with a Copy Files Phase where all relevent headers are copied to the Products Directory at subpath include/WebRTC.\nAll Header Files\nTHe following SDK classes / protocols / objects were moved into the modules/audio_device/ios/components/audio location because the audio_device_ios.h header is included in modules/audio_device/audio_device_impl.cc. The change was introduced with this commit. While this probably made sense when using Blaze/Bazel. In this configuration here, the SDK libraries are linking the core library and this is a unidirectional path. In iOS SDK terms, this would be something like QuartzCore linking UIKit.\nSo this approach has to be reversed but without making code changes. This can easily be achieved by re-exporting the symbols:\nRTCAudioDevice RTCAudioSession RTCAudioSessionDelegate RTCAudioSessionActivationDelegate RTCAudioSessionConfiguration from CoreRTC in the libWebRTC and the WebRTC (framework) targets. One minor issue is that the implementation of those references SDK includes, such as RTCMacros.h and RTCLogging.h.\nA new header is created and added to the rtc_base directory: rtc_export_bridge.h. The content borrows from those defines that are declared in the SDK.\n#ifndef rtc_export_bridge_h #define rtc_export_bridge_h #include \"rtc_base/system/rtc_export.h\" #ifndef RTC_OBJC_TYPE #define RTC_OBJC_TYPE(t) t #endif #ifndef RTC_OBJC_EXPORT #define RTC_OBJC_EXPORT RTC_EXPORT #endif #ifndef RTC_EXTERN #if defined(__cplusplus) #define RTC_EXTERN extern \"C\" RTC_OBJC_EXPORT #else #define RTC_EXTERN extern RTC_OBJC_EXPORT #endif #endif #ifndef RTC_FWD_DECL_OBJC_CLASS #ifdef __OBJC__ #define RTC_FWD_DECL_OBJC_CLASS(classname) @class classname #else #define RTC_FWD_DECL_OBJC_CLASS(classname) typedef struct objc_object classname #endif #endif This allows the symbols that are already annotated with RTC_OBJC_EXPORT do be re-exported. Another small caveat… the RTCAudioDevice.h header must include the newly defined rtc_export_bridge.h header. This include needs to be hidden from the public interface however. For that purpose, the reexported folder was created, containing the original header files that are part of the public API definition. The actual headers are hidden from the public interfaces of libWebRTC and WebRTC.\nWebRTC The framework target builds a similar set of sources as the static library, the public and internal headers however are organized using Xcode’s Build Phases configuration.\nDefines Looking at the BUILD.gn and webrtc.gni file(s), there are a lot of preprocessor macro definitions that seem extremely relevant. There are several options to provide those to the build system. A config.h file seems to be generally used for provisioning relevant macros.\nDefault configuration values for iOS builds\nAdding a new header file to the rtc_base directory: rtc_base/rtc_defines.h.\nContent of rtc_defines.h\nIn order to take advantage of this configuration, the header needs to be included in a lot of source files. As a rule of thumb, if a #define is checked, the include statement #include \"rtc_base/rtc_defines.h\" should be added.\n#ifndef COMMON_AUDIO_FIR_FILTER_AVX2_H_ #define COMMON_AUDIO_FIR_FILTER_AVX2_H_ #include \"rtc_base/rtc_defines.h\" #if defined(WEBRTC_ARCH_X86_FAMILY) \u0026\u0026 defined(WEBRTC_HAS_AVX2) #include #include #include \"common_audio/fir_filter.h\" #include \"rtc_base/memory/aligned_malloc.h\" namespace webrtc { class FIRFilterAVX2 : public FIRFilter {...} } // namespace webrtc #endif // defined(WEBRTC_ARCH_X86_FAMILY) \u0026\u0026 defined(WEBRTC_HAS_AVX2) #endif // COMMON_AUDIO_FIR_FILTER_AVX2_H_ On a platform without AVX2 support, this would be compiled into an (empty) .o file, which adds a small amount of overhead but should be stripped out of any optimized binary that is being distributed.\nGenerated Files Protobufs Use your favorite protoc build, or try out this one that is part of WebRTC’s dependency list. Executable protoc binaries can be built with SwiftPM for iOS/macOS on arm64/x86_64.\nRegistered Field Trials The registered_field_trials.h file is generated by a script during Google’s build process. Depending on the user’s needs, the individual variants could be added manually to Xcode.\n// This file was automatically generated. Do not edit. #ifndef GEN_REGISTERED_FIELD_TRIALS_H_ #define GEN_REGISTERED_FIELD_TRIALS_H_ #include \"absl/strings/string_view.h\" namespace webrtc { inline constexpr absl::string_view kRegisteredFieldTrials[] = { \"\", }; } // namespace webrtc #endif // GEN_REGISTERED_FIELD_TRIALS_H_ For that purpose, a dedicated generated folder is created and relevant headers / sources are copied into it.\nThird Party Dependencies The following repositories were forked from their origin and a Package.swift file was added to allow building static and dynamic libraries with Xcode / SwiftPM. The branch release/webrtc has been created where the package definiton is available and also potential (required/useful) changes were made.\nAbseil-C++\nCRC32c\nBoringSSL\nJSONcpp\nlibSRTP\nlibVPX\nlibYuv\nOPUS\nProtobuf\nRNNoise\nutf8_range\nBuild issues Not considering implicit int32 to int64 conversions, Xcode has revealed a small list of warnings\nBuild performance All measurements were taken on a 2021 16\" MacBook Pro M1-Max running macOS Ventura 13.4.1 (c), build: 22F770820d\nThe WebRTC framework build with Ninja:\ntime ninja -C out/ios_64 framework_objc ninja: Entering directory `out/ios_64' [3640/3640] STAMP obj/sdk/framework_objc.stamp ninja -C out/ios_64 framework_objc 892.88s user 189.84s system 623% cpu 2:53.54 total Three Xcode builds using the Product \u003e Perform Action \u003e Build with Timing Summary were done with the following results:\n1: Build succeeded 7/26/23, 10:40 AM 171.6 seconds\n2: Build succeeded 7/26/23, 10:43 AM 192.5 seconds\n3: Build succeeded 7/26/23, 11:00 AM 187.9 seconds\nConclusion Judging from those preliminary (and unarguably unverified) results, the following allegations are made:\nThe Xcode build of the WebRTC iOS framework (arm64 target) using the methods described in this article is performed in similar time compared to the Ninja build, described by Google. The build graph created by xcodebuild is NOT less efficient than the (allegedly) manually created and highly optimized build graph produced by Google’s Bazel/Blaze toolchain. The complexity of managing all files in the build targets is significantly lower (lower is better) with Xcode. There are no performance concerns managing several thousand source and header files with Xcode, when run on an APFS file system on a current generation SSD drive. It is reasonable to assume that the same statement would not apply when the Xcode project file is located in a user space mounted network file system. ",
+  "wordCount" : "1404",
+  "inLanguage": "en",
+  "datePublished": "2023-08-20T18:00:00-07:00",
+  "dateModified": "2023-08-20T18:00:00-07:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/main/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "iOS Engineering",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ronnyf.github.io/ios-eng/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ronnyf.github.io/ios-eng" accesskey="h" title="iOS Engineering (Alt + H)">iOS Engineering</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Building WebRTC for iOS/macOS with Xcode
+    </h1>
+    <div class="post-meta"><span title='2023-08-20 18:00:00 -0700 PDT'>August 20, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
+<p>WebRTC (Web Real-Time Communication) is a powerful open-source technology that enables real-time communication capabilities in web and mobile applications. While WebRTC is well-supported in web browsers, incorporating it into iOS applications often requires (re)building a binary framework to ensure seamless integration and improved performance. In this article, we will provide a comprehensive step-by-step guide on how to integrate WebRTC into any iOS/macOS application and building it from source entirely in Xcode.</p>
+<p>Wait! What? Why?</p>
+<p>But one can build this easily as a framework with Google&rsquo;s depot tools, you might say. That is entirely correct. It might even be more convenient to run someone&rsquo;s clever build script, grab your favorite (non)cafeinated drink and voila. But what if maybe there&rsquo;s another way?</p>
+<h2 id="motivation">Motivation<a hidden class="anchor" aria-hidden="true" href="#motivation">#</a></h2>
+<p>The main motiviation for this endeavor is to create the ability for developers to not only live-debug into the framework with familiar tools (Xcode, Instruments) but to also build a greater variety of targets. This then opens up a lot more opportunities to optimize and modernize some parts of WebRTC for iOS. With Swift-C++ interopability coming with the Swift 5.9 toolchain, some very interesting engineering might happen that could yield benefits not only for Apple platforms. Let&rsquo;s get started.</p>
+<h2 id="creating-an-xcode-project-for-webrtc">Creating an Xcode project for WebRTC<a hidden class="anchor" aria-hidden="true" href="#creating-an-xcode-project-for-webrtc">#</a></h2>
+<p>A basic familiarity with Xcode and how to create projects, targets and their basic configuration is assumed.</p>
+<p>The final product is available in <a href="https://github.com/ronnyf/WebRTC.git" target="_blank" rel="noopener">this github respsitory</a></p>
+<h3 id="obtaining-the-sources">Obtaining the sources<a hidden class="anchor" aria-hidden="true" href="#obtaining-the-sources">#</a></h3>
+<p>Refer to <a href="https://webrtc.github.io/webrtc-org/native-code/ios/" title="Google&#39;s instructions" target="_blank" rel="noopener">Google&rsquo;s instructions</a> for fetching the WebRTC sources. At the time of writing this, the full sync would take around <strong>20 GB</strong> of disk space. In contrast, the &ldquo;Built-With-Xcode&rdquo; variant occupies <strong>788 MB</strong>.</p>
+<h3 id="creating-the-targets">Creating the targets<a hidden class="anchor" aria-hidden="true" href="#creating-the-targets">#</a></h3>
+<p>While Google&rsquo;s build configuration defines several dozens of individual targets that are very neatly organized into an efficient dependency graph, this is not something that is going to be replicated for the Xcode build. The build graph is something that Xcode manages internally. Rather than taking on those responsibilities manually, Xcode is entrusted with this. Please refer to the paragraph about <a href="#build-performance">build performance</a> for a breakdown of build times of Xcode and Ninja.</p>
+<p>The targets that are being created are the following:</p>
+<ul>
+<li>WebRTC (framework)</li>
+<li>libWebRTC (static library)</li>
+<li>CoreRTC (static library)</li>
+</ul>
+<h4 id="corertc">CoreRTC<a hidden class="anchor" aria-hidden="true" href="#corertc">#</a></h4>
+<p>The <em>CoreRTC</em> static library will contain all objects (minus the unit tests and mock objects) from the following folders:</p>
+<ul>
+<li>api</li>
+<li>audio</li>
+<li>call</li>
+<li>common_audio</li>
+<li>common_video</li>
+<li>logging</li>
+<li>media</li>
+<li>modules</li>
+<li>net</li>
+<li>p2p</li>
+<li>pc</li>
+<li>resources</li>
+<li>rtc_base</li>
+<li>rtc_tools</li>
+<li>stats</li>
+<li>system_wrappers</li>
+<li>test</li>
+<li>testing</li>
+<li>third_party*</li>
+<li>video</li>
+</ul>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-core-sources/">All Source Files</a></p>
+<p>Google engineers follow the pattern of storing header files near the location of the source files and refer to them by thir relative path to the source root. There should be a name for this 🤷‍♂️.</p>
+<p>Setting the <code>User Header Search Paths</code> to <code>$(SRCROOT)</code> in Xcode&rsquo;s <code>Build Settings</code>.</p>
+<pre tabindex="0"><code>USER_HEADER_SEARCH_PATHS = $(SRCROOT)
+</code></pre><h4 id="libwebrtc">libWebRTC<a hidden class="anchor" aria-hidden="true" href="#libwebrtc">#</a></h4>
+<p>The static <code>WebRTC</code> library links the <code>CoreRTC</code> static library and builds the following sources.</p>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-lib-sources/">All Source Files</a></p>
+<p>Additionally, the public headers need to be made available for other libraries to link this one. This is achieved with a <code>Copy Files Phase</code> where all relevent headers are copied to the <code>Products Directory</code> at subpath <code>include/WebRTC</code>.</p>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-lib-headers/">All Header Files</a></p>
+<p>THe following SDK classes / protocols / objects were moved into the <code>modules/audio_device/ios/components/audio</code> location because the <code>audio_device_ios.h</code> header is included in <code>modules/audio_device/audio_device_impl.cc</code>. The change was introduced with <a href="https://webrtc.googlesource.com/src/&#43;/8d95e3b2114e25977af93599a32b941d4e627364" target="_blank" rel="noopener">this commit</a>. While this probably made sense when using <code>Blaze/Bazel</code>. In this configuration here, the SDK libraries are linking the core library and this is a unidirectional path. In iOS SDK terms, this would be something like <code>QuartzCore</code> linking <code>UIKit</code>.</p>
+<p>So this approach has to be reversed but without making code changes. This can easily be achieved by re-exporting the symbols:</p>
+<ul>
+<li>RTCAudioDevice</li>
+<li>RTCAudioSession</li>
+<li>RTCAudioSessionDelegate</li>
+<li>RTCAudioSessionActivationDelegate</li>
+<li>RTCAudioSessionConfiguration</li>
+</ul>
+<p>from <code>CoreRTC</code> in the <code>libWebRTC</code> and the <code>WebRTC (framework)</code> targets. One minor issue is that the implementation of those references SDK includes, such as <code>RTCMacros.h</code> and <code>RTCLogging.h</code>.</p>
+<p>A new header is created and added to the <code>rtc_base</code> directory: <strong>rtc_export_bridge.h</strong>. The content borrows from those defines that are declared in the SDK.</p>
+<pre><code>#ifndef rtc_export_bridge_h
+#define rtc_export_bridge_h
+
+#include &quot;rtc_base/system/rtc_export.h&quot;
+
+#ifndef RTC_OBJC_TYPE
+#define RTC_OBJC_TYPE(t) t
+#endif
+
+#ifndef RTC_OBJC_EXPORT
+#define RTC_OBJC_EXPORT RTC_EXPORT
+#endif
+
+#ifndef RTC_EXTERN
+#if defined(__cplusplus)
+#define RTC_EXTERN extern &quot;C&quot; RTC_OBJC_EXPORT
+#else
+#define RTC_EXTERN extern RTC_OBJC_EXPORT
+#endif
+#endif
+
+#ifndef RTC_FWD_DECL_OBJC_CLASS
+#ifdef __OBJC__
+#define RTC_FWD_DECL_OBJC_CLASS(classname) @class classname
+#else
+#define RTC_FWD_DECL_OBJC_CLASS(classname) typedef struct objc_object classname
+#endif
+#endif
+</code></pre>
+<p>This allows the symbols that are already annotated with <code>RTC_OBJC_EXPORT</code> do be re-exported. Another small caveat&hellip; the <code>RTCAudioDevice.h</code> header must include the newly defined <code>rtc_export_bridge.h</code> header. This include needs to be hidden from the public interface however. For that purpose, the <code>reexported</code> folder was created, containing the original header files that are part of the public API definition. The actual headers are hidden from the public interfaces of <code>libWebRTC</code> and <code>WebRTC</code>.</p>
+<h4 id="webrtc">WebRTC<a hidden class="anchor" aria-hidden="true" href="#webrtc">#</a></h4>
+<p>The framework target builds a similar set of sources as the static library, the public and internal headers however are organized using Xcode&rsquo;s <code>Build Phases</code> configuration.</p>
+<h4 id="defines">Defines<a hidden class="anchor" aria-hidden="true" href="#defines">#</a></h4>
+<p>Looking at the <code>BUILD.gn</code> and <code>webrtc.gni</code> file(s), there are a lot of preprocessor macro definitions that seem extremely relevant. There are several options to provide those to the build system. A <code>config.h</code> file seems to be generally used for provisioning relevant macros.</p>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc_config/">Default configuration values for iOS builds</a></p>
+<p>Adding a new header file to the <code>rtc_base</code> directory: <code>rtc_base/rtc_defines.h</code>.</p>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc_defines/">Content of <em>rtc_defines.h</em></a></p>
+<p>In order to take advantage of this configuration, the header needs to be included in a lot of source files. As a rule of thumb, if a <code>#define</code> is checked, the include statement <code>#include &quot;rtc_base/rtc_defines.h&quot;</code> should be added.</p>
+<pre tabindex="0"><code>#ifndef COMMON_AUDIO_FIR_FILTER_AVX2_H_
+#define COMMON_AUDIO_FIR_FILTER_AVX2_H_
+
+#include &#34;rtc_base/rtc_defines.h&#34;
+
+#if defined(WEBRTC_ARCH_X86_FAMILY) &amp;&amp; defined(WEBRTC_HAS_AVX2)
+
+#include &lt;stddef.h&gt;
+
+#include &lt;memory&gt;
+
+#include &#34;common_audio/fir_filter.h&#34;
+#include &#34;rtc_base/memory/aligned_malloc.h&#34;
+
+namespace webrtc {
+
+class FIRFilterAVX2 : public FIRFilter {...}
+
+}  // namespace webrtc
+
+#endif // defined(WEBRTC_ARCH_X86_FAMILY) &amp;&amp; defined(WEBRTC_HAS_AVX2)
+#endif  // COMMON_AUDIO_FIR_FILTER_AVX2_H_
+</code></pre><p>On a platform without <code>AVX2</code> support, this would be compiled into an (empty) <code>.o</code> file, which adds a small amount of overhead but should be stripped out of any optimized binary that is being distributed.</p>
+<h4 id="generated-files">Generated Files<a hidden class="anchor" aria-hidden="true" href="#generated-files">#</a></h4>
+<h5 id="protobufs">Protobufs<a hidden class="anchor" aria-hidden="true" href="#protobufs">#</a></h5>
+<p>Use your favorite <code>protoc</code> build, or try out <a href="https://github.com/ronnyf/protobuf/tree/release/webrtc" target="_blank" rel="noopener">this one</a> that is part of WebRTC&rsquo;s dependency list. Executable <code>protoc</code> binaries can be built with SwiftPM for iOS/macOS on arm64/x86_64.</p>
+<h5 id="registered-field-trials">Registered Field Trials<a hidden class="anchor" aria-hidden="true" href="#registered-field-trials">#</a></h5>
+<p>The <code>registered_field_trials.h</code> file is generated by a script during Google&rsquo;s build process. Depending on the user&rsquo;s needs, the individual variants could be added manually to Xcode.</p>
+<pre tabindex="0"><code>// This file was automatically generated. Do not edit.
+
+#ifndef GEN_REGISTERED_FIELD_TRIALS_H_
+#define GEN_REGISTERED_FIELD_TRIALS_H_
+
+#include &#34;absl/strings/string_view.h&#34;
+
+namespace webrtc {
+
+inline constexpr absl::string_view kRegisteredFieldTrials[] = {
+    &#34;&#34;,
+};
+
+}  // namespace webrtc
+
+#endif  // GEN_REGISTERED_FIELD_TRIALS_H_
+</code></pre><p>For that purpose, a dedicated <code>generated</code> folder is created and relevant headers / sources are copied into it.</p>
+<h3 id="third-party-dependencies">Third Party Dependencies<a hidden class="anchor" aria-hidden="true" href="#third-party-dependencies">#</a></h3>
+<p>The following repositories were forked from their origin and a <code>Package.swift</code> file was added to allow building static and dynamic libraries with Xcode / SwiftPM. The branch <code>release/webrtc</code> has been created where the package definiton is available and also potential (required/useful) changes were made.</p>
+<ul>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-absl/">Abseil-C++</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-crc32c/">CRC32c</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-boringssl/">BoringSSL</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-jsoncpp/">JSONcpp</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-libsrtp/">libSRTP</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-libvpx/">libVPX</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-libyuv/">libYuv</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-libopus/">OPUS</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-protobuf/">Protobuf</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-rnnoise/">RNNoise</a></p>
+</li>
+<li>
+<p><a href="/ios-eng/posts/webrtc-xc/webrtc-dep-utf8range/">utf8_range</a></p>
+</li>
+</ul>
+<h2 id="build-issues">Build issues<a hidden class="anchor" aria-hidden="true" href="#build-issues">#</a></h2>
+<p>Not considering implicit <code>int32</code> to <code>int64</code> conversions, Xcode has revealed a small <a href="/ios-eng/posts/webrtc-xc/webrtc-issues/">list of warnings</a></p>
+<h2 id="build-performance">Build performance<a hidden class="anchor" aria-hidden="true" href="#build-performance">#</a></h2>
+<p>All measurements were taken on a 2021 16&quot; MacBook Pro M1-Max running macOS Ventura 13.4.1 (c), build: 22F770820d</p>
+<p>The WebRTC framework build with <code>Ninja</code>:</p>
+<pre tabindex="0"><code>time ninja -C out/ios_64 framework_objc
+ninja: Entering directory `out/ios_64&#39;
+[3640/3640] STAMP obj/sdk/framework_objc.stamp
+ninja -C out/ios_64 framework_objc  892.88s user 189.84s system 623% cpu 2:53.54 total
+</code></pre><p>Three Xcode builds using the <code>Product &gt; Perform Action &gt; Build with Timing Summary</code> were done with the following results:</p>
+<p>1: Build succeeded    7/26/23, 10:40 AM    <code>171.6 seconds</code></p>
+<p>2: Build succeeded    7/26/23, 10:43 AM    <code>192.5 seconds</code></p>
+<p>3: Build succeeded    7/26/23, 11:00 AM    <code>187.9 seconds</code></p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>Judging from those preliminary (and unarguably unverified) results, the following allegations are made:</p>
+<ul>
+<li>The Xcode build of the WebRTC iOS framework (arm64 target) using the methods described in this article is performed in similar time compared to the <code>Ninja</code> build, <a href="https://webrtc.github.io/webrtc-org/native-code/ios/" target="_blank" rel="noopener">described by Google</a>.</li>
+<li>The build graph created by <code>xcodebuild</code> is <strong>NOT</strong> less efficient than the (allegedly) manually created and highly optimized build graph produced by Google&rsquo;s <code>Bazel/Blaze</code> toolchain.</li>
+<li>The complexity of managing all files in the build targets is significantly lower (lower is better) with Xcode.</li>
+<li>There are no performance concerns managing several thousand source and header files with Xcode, when run on an APFS file system on a current generation SSD drive. It is reasonable to assume that the same statement would not apply when the Xcode project file is located in a user space mounted network file system.</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2023 <a href="https://ronnyf.github.io/ios-eng">iOS Engineering</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

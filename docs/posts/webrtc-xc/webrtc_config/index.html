@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>WebRTC configuration | iOS Engineering</title>
+<meta name="keywords" content="">
+<meta name="description" content="Back to Article
+RTC configuration values set via webrtc.gni The build system uses those configuration values to determine which #define to declare.
+Configuration Values rtc_enable_symbol_export = true
+Setting this to true will make RTC_EXPORT (see rtc_base/system/rtc_export.h) expand to code that will manage symbols visibility.
+#define WEBRTC_ENABLE_SYMBOL_EXPORT rtc_enable_objc_symbol_export = true
+Setting this to true will make RTC_OBJC_EXPORT expand to code that will manage symbols visibility. By default, Obj-C/Obj-C&#43;&#43; symbols are exported if C&#43;&#43; symbols are but setting this arg to true while keeping rtc_enable_symbol_export= false will only export RTC_OBJC_EXPORT annotated symbols.">
+<meta name="author" content="">
+<link rel="canonical" href="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc_config/">
+<link crossorigin="anonymous" href="/ios-eng/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/ios-eng/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ronnyf.github.io/ios-eng/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ronnyf.github.io/ios-eng/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ronnyf.github.io/ios-eng/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ronnyf.github.io/ios-eng/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ronnyf.github.io/ios-eng/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="WebRTC configuration" />
+<meta property="og:description" content="Back to Article
+RTC configuration values set via webrtc.gni The build system uses those configuration values to determine which #define to declare.
+Configuration Values rtc_enable_symbol_export = true
+Setting this to true will make RTC_EXPORT (see rtc_base/system/rtc_export.h) expand to code that will manage symbols visibility.
+#define WEBRTC_ENABLE_SYMBOL_EXPORT rtc_enable_objc_symbol_export = true
+Setting this to true will make RTC_OBJC_EXPORT expand to code that will manage symbols visibility. By default, Obj-C/Obj-C&#43;&#43; symbols are exported if C&#43;&#43; symbols are but setting this arg to true while keeping rtc_enable_symbol_export= false will only export RTC_OBJC_EXPORT annotated symbols." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc_config/" /><meta property="og:image" content="https://ronnyf.github.io/ios-eng"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-08-20T18:00:00-07:00" />
+<meta property="article:modified_time" content="2023-08-20T18:00:00-07:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://ronnyf.github.io/ios-eng"/>
+
+<meta name="twitter:title" content="WebRTC configuration"/>
+<meta name="twitter:description" content="Back to Article
+RTC configuration values set via webrtc.gni The build system uses those configuration values to determine which #define to declare.
+Configuration Values rtc_enable_symbol_export = true
+Setting this to true will make RTC_EXPORT (see rtc_base/system/rtc_export.h) expand to code that will manage symbols visibility.
+#define WEBRTC_ENABLE_SYMBOL_EXPORT rtc_enable_objc_symbol_export = true
+Setting this to true will make RTC_OBJC_EXPORT expand to code that will manage symbols visibility. By default, Obj-C/Obj-C&#43;&#43; symbols are exported if C&#43;&#43; symbols are but setting this arg to true while keeping rtc_enable_symbol_export= false will only export RTC_OBJC_EXPORT annotated symbols."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Posts",
+      "item": "https://ronnyf.github.io/ios-eng/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "",
+      "item": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "WebRTC configuration",
+      "item": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc_config/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "WebRTC configuration",
+  "name": "WebRTC configuration",
+  "description": "Back to Article\nRTC configuration values set via webrtc.gni The build system uses those configuration values to determine which #define to declare.\nConfiguration Values rtc_enable_symbol_export = true\nSetting this to true will make RTC_EXPORT (see rtc_base/system/rtc_export.h) expand to code that will manage symbols visibility.\n#define WEBRTC_ENABLE_SYMBOL_EXPORT rtc_enable_objc_symbol_export = true\nSetting this to true will make RTC_OBJC_EXPORT expand to code that will manage symbols visibility. By default, Obj-C/Obj-C++ symbols are exported if C++ symbols are but setting this arg to true while keeping rtc_enable_symbol_export= false will only export RTC_OBJC_EXPORT annotated symbols.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Back to Article\nRTC configuration values set via webrtc.gni The build system uses those configuration values to determine which #define to declare.\nConfiguration Values rtc_enable_symbol_export = true\nSetting this to true will make RTC_EXPORT (see rtc_base/system/rtc_export.h) expand to code that will manage symbols visibility.\n#define WEBRTC_ENABLE_SYMBOL_EXPORT rtc_enable_objc_symbol_export = true\nSetting this to true will make RTC_OBJC_EXPORT expand to code that will manage symbols visibility. By default, Obj-C/Obj-C++ symbols are exported if C++ symbols are but setting this arg to true while keeping rtc_enable_symbol_export= false will only export RTC_OBJC_EXPORT annotated symbols.\n#define WEBRTC_ENABLE_OBJC_SYMBOL_EXPORT rtc_dlog_always_on = false\nSetting this to true, will make RTC_DLOG() expand to log statements instead of being removed by the preprocessor. This is useful for example to be able to get RTC_DLOGs on a release build.\n#define DLOG_ALWAYS_ON rtc_enable_google_benchmarks = false\nEnables additional build targets that rely on //third_party/google_benchmarks.\nrtc_exclude_field_trial_default = false\nSetting this to true will define WEBRTC_EXCLUDE_FIELD_TRIAL_DEFAULT which will tell the pre-processor to remove the default definition of symbols needed to use field_trial. In that case a new implementation needs to be provided.\nWhen WebRTC is built as part of Chromium it should exclude the default implementation of field_trial unless it is building for NACL or Chromecast.\nrtc_exclude_metrics_default = false\nSetting this to true will define WEBRTC_EXCLUDE_METRICS_DEFAULT which will tell the pre-processor to remove the default definition of symbols needed to use metrics. In that case a new implementation needs to be provided.\nrtc_exclude_system_time = false\nSetting this to true will define WEBRTC_EXCLUDE_SYSTEM_TIME which will tell the pre-processor to remove the default definition of the SystemTimeNanos() which is defined in rtc_base/system_time.cc. In that case a new implementation needs to be provided.\nrtc_builtin_ssl_root_certificates = true\nSetting this to false will require the API user to pass in their own SSLCertificateVerifier to verify the certificates presented from a TLS-TURN server. In return disabling this saves around 100kb in the binary.\n#define WEBRTC_EXCLUDE_BUILT_IN_SSL_ROOT_CERTS rtc_include_ilbc = true\nInclude the iLBC audio codec?\nrtc_include_opus = true\nDisable this to avoid building the Opus audio codec.\nrtc_opus_support_120ms_ptime = true\nEnable this if the Opus version upon which WebRTC is built supports direct encoding of 120 ms packets.\nrtc_opus_variable_complexity = false\nEnable this to let the Opus audio codec change complexity on the fly.\nrtc_enable_external_auth = false\nEnable when an external authentication mechanism is used for performing packet authentication for RTP packets instead of libsrtp.\n#ifdef ENABLE_EXTERNAL_AUTH #undef ENABLE_EXTERNAL_AUTH #endif apm_debug_dump = false\nSelects whether debug dumps for the audio processing module should be generated.\nrtc_exclude_audio_processing_module = false\nSelects whether the audio processing module should be excluded.\n#ifdef WEBRTC_EXCLUDE_AUDIO_PROCESSING_MODULE #undef WEBRTC_EXCLUDE_AUDIO_PROCESSING_MODULE #endif rtc_enable_bwe_test_logging = false\nSet this to true to enable BWE test logging.\nrtc_build_examples = false\nSet this to true to build examples.\nrtc_build_tools = true\nSet this to false to skip building tools.\nrtc_use_x11 = false\nSet this to false to skip building code that requires X11.\nrtc_use_pipewire = ‘false’\nSet this to use PipeWire on the Wayland display server. By default it’s only enabled on desktop Linux (excludes ChromeOS) and only when using the sysroot as PipeWire is not available in older and supported Ubuntu and Debian distributions.\nrtc_link_pipewire = false\nSet this to link PipeWire and required libraries directly instead of using the dlopen.\nbuild_with_mozilla = false\nEnable to use the Mozilla internal settings.\nrtc_enable_android_aaudio = false\nExperimental: enable use of Android AAudio which requires Android SDK 26 or above and NDK r16 or above.\nrtc_sanitize_coverage = \"\"\nSet to func, block, edge for coverage generation. At unit test runtime set UBSAN_OPTIONS=\"coverage=1\". It is recommend to set include_examples=0. Use llvm’s sancov -html-report for human readable reports. See http://clang.llvm.org/docs/SanitizerCoverage.html .\nrtc_prefer_fixed_point = current_cpu == arm || current_cpu == arm64\nSelects fixed-point code where possible (true for arm and arm64).\nrtc_build_with_neon = true\nDetermines whether NEON code will be built.\nrtc_use_h264 = false\nEnable this to build OpenH264 encoder/FFmpeg decoder. This is supported on all platforms except Android and iOS.\n#ifdef WEBRTC_USE_H264 #undef WEBRTC_USE_H264 #endif rtc_use_absl_mutex = false\nEnable this flag to make webrtc::Mutex be implemented by absl::Mutex.\n#ifdef WEBRTC_ABSL_MUTEX #undef WEBRTC_ABSL_MUTEX #endif rtc_ios_use_opengl_rendering = is_ios \u0026\u0026 target_environment != catalyst\nDetermines whether OpenGL is available on iOS.\nrtc_include_builtin_audio_codecs = true\nWhen set to false, builtin audio encoder/decoder factories and all the audio codecs they depend on will not be included in libwebrtc.{a|lib} (they will still be included in libjingle_peerconnection_so.so and WebRTC.framework)\nrtc_include_dav1d_in_internal_decoder_factory = false\nIncludes the dav1d decoder in the internal decoder factory when set to true.\n#define RTC_DAV1D_IN_INTERNAL_DECODER_FACTORY rtc_strict_field_trials = \"\"\nWhen enabled, a run-time check will make sure that all field trial keys have been registered in accordance with the field trial policy, see g3doc/field-trials.md. The value can be set to the following:\n“dcheck” RTC_DCHECKs that the field trial has been registered. RTC_DCHECK must be enabled separately.\n“warn” RTC_LOGs a message with LS_WARNING severity if the field trial hasn’t been registered.\n#define WEBRTC_STRICT_FIELD_TRIALS 0 // \"\" #define WEBRTC_STRICT_FIELD_TRIALS 1 // \"dcheck\" #define WEBRTC_STRICT_FIELD_TRIALS 2 // \"warn\" rtc_enable_protobuf = true\nEnables the use of protocol buffers for debug recordings.\n#define WEBRTC_ENABLE_PROTOBUF 1 rtc_enable_sctp = true\nSet this to disable building with support for SCTP data channels.\n#define WEBRTC_HAVE_SCTP rtc_build_json = true\nrtc_build_libsrtp = true\nrtc_build_libvpx = true\nrtc_libvpx_build_vp9 = true\n#define RTC_ENABLE_VP9 rtc_build_opus = true\nrtc_build_ssl = true\nDisable these to not build components which can be externally provided.\nrtc_enable_libevent = false\nrtc_build_libevent = false\nEnable libevent task queues on platforms that support it.\nrtc_include_pulse_audio = false\nExcluded in Chromium since its prerequisites don’t require Pulse Audio.\nrtc_include_internal_audio_device = true\nChromium uses its own IO handling, so the internal ADM is only built for standalone WebRTC.\n#define WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE rtc_enable_avx2 = false\nSet this to true to enable the avx2 support in webrtc.\n#define WEBRTC_ENABLE_AVX2 rtc_include_tests = false\nSet this to true to build the unit tests. Disabled when building with Chromium or Mozilla.\n#define WEBRTC_NON_STATIC_TRACE_EVENT_HANDLERS 1 rtc_use_x11_extensions = false\nSet this to false to skip building code that also requires X11 extensions such as Xdamage, Xfixes.\nrtc_disable_logging = false\nSet this to true to fully remove logging from WebRTC.\n#ifdef RTC_DISABLE_LOGGING #undef RTC_DISABLE_LOGGING #endif rtc_disable_trace_events = false\nSet this to true to disable trace events.\n#ifdef RTC_DISABLE_TRACE_EVENTS #undef RTC_DISABLE_TRACE_EVENTS #endif rtc_disable_check_msg = false\nSet this to true to disable detailed error message and logging for RTC_CHECKs.\n#define RTC_DISABLE_CHECK_MSG rtc_disable_metrics = false\nSet this to true to disable webrtc metrics.\n#ifdef RTC_DISABLE_METRICS #undef RTC_DISABLE_METRICS #endif rtc_exclude_transient_suppressor = false\nSet this to true to exclude the transient suppressor in the audio processing module from the build.\n#ifdef WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR #undef WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR #endif rtc_desktop_capture_supported = is_mac\nDesktop capturer is supported only on Windows, OSX and Linux.\nAdditional defines based on BUILDCONFIG.gn is_ios = current_os == ios\n#define WEBRTC_IOS #define WEBRTC_MAC is_mac = current_os == mac\n#define WEBRTC_MAC is_posix = !is_win \u0026\u0026 !is_fuchsia\n#define WEBRTC_POSIX current_cpu == arm64\n#define WEBRTC_ARCH_ARM64 #define WEBRTC_HAS_NEON current_cpu == arm\n#define WEBRTC_ARCH_ARM #define WEBRTC_HAS_NEON arm_version \u003e= 7\n#define WEBRTC_ARCH_ARM_V7 arm_use_neon == true\n#define WEBRTC_HAS_NEON ",
+  "wordCount" : "1144",
+  "inLanguage": "en",
+  "datePublished": "2023-08-20T18:00:00-07:00",
+  "dateModified": "2023-08-20T18:00:00-07:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc_config/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "iOS Engineering",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ronnyf.github.io/ios-eng/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ronnyf.github.io/ios-eng" accesskey="h" title="iOS Engineering (Alt + H)">iOS Engineering</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      WebRTC configuration
+    </h1>
+    <div class="post-meta"><span title='2023-08-20 18:00:00 -0700 PDT'>August 20, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><a href="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/main/">Back to Article</a></p>
+<h3 id="rtc-configuration-values-set-via-webrtcgni">RTC configuration values set via <code>webrtc.gni</code><a hidden class="anchor" aria-hidden="true" href="#rtc-configuration-values-set-via-webrtcgni">#</a></h3>
+<p>The build system uses those configuration values to determine which <code>#define</code> to declare.</p>
+<h4 id="configuration-values">Configuration Values<a hidden class="anchor" aria-hidden="true" href="#configuration-values">#</a></h4>
+<p><code>rtc_enable_symbol_export</code> = <code>true</code></p>
+<p>Setting this to true will make RTC_EXPORT (see rtc_base/system/rtc_export.h) expand to code that will manage symbols visibility.</p>
+<pre tabindex="0"><code>#define WEBRTC_ENABLE_SYMBOL_EXPORT
+</code></pre><hr>
+<p><code>rtc_enable_objc_symbol_export</code> = <code>true</code></p>
+<p>Setting this to true will make RTC_OBJC_EXPORT expand to code that will manage symbols visibility. By default, Obj-C/Obj-C++ symbols are exported if C++ symbols are but setting this arg to true while keeping <code>rtc_enable_symbol_export</code>= <code>false</code> will only export <code>RTC_OBJC_EXPORT</code> annotated symbols.</p>
+<pre tabindex="0"><code>#define WEBRTC_ENABLE_OBJC_SYMBOL_EXPORT
+</code></pre><hr>
+<p><code>rtc_dlog_always_on</code> = <code>false</code></p>
+<p>Setting this to true, will make RTC_DLOG() expand to log statements instead of being removed by the preprocessor.
+This is useful for example to be able to get <em>RTC_DLOGs</em> on a release build.</p>
+<pre tabindex="0"><code> #define DLOG_ALWAYS_ON
+</code></pre><hr>
+<p><code>rtc_enable_google_benchmarks</code> = <code>false</code></p>
+<p>Enables additional build targets that rely on <code>//third_party/google_benchmarks</code>.</p>
+<hr>
+<p><code>rtc_exclude_field_trial_default</code> = <code>false</code></p>
+<p>Setting this to true will define <code>WEBRTC_EXCLUDE_FIELD_TRIAL_DEFAULT</code> which will tell the pre-processor to remove the default definition of symbols needed to use field_trial. In that case a new implementation needs to be provided.</p>
+<p>When WebRTC is built as part of Chromium it should exclude the default implementation of field_trial unless it is building for NACL or Chromecast.</p>
+<hr>
+<p><code>rtc_exclude_metrics_default</code> = <code>false</code></p>
+<p>Setting this to true will define <code>WEBRTC_EXCLUDE_METRICS_DEFAULT</code> which will tell the pre-processor to remove the default definition of symbols needed to use metrics. In that case a new implementation needs to be provided.</p>
+<hr>
+<p><code>rtc_exclude_system_time</code> = <code>false</code></p>
+<p>Setting this to true will define <code>WEBRTC_EXCLUDE_SYSTEM_TIME</code> which will tell the pre-processor to remove the default definition of the SystemTimeNanos() which is defined in <code>rtc_base/system_time.cc</code>. In that case a new implementation needs to be provided.</p>
+<hr>
+<p><code>rtc_builtin_ssl_root_certificates</code> = <code>true</code></p>
+<p>Setting this to <code>false</code> will require the API user to pass in their own <code>SSLCertificateVerifier</code> to verify the certificates presented from a TLS-TURN server. In return disabling this <strong>saves around 100kb</strong> in the binary.</p>
+<pre tabindex="0"><code>#define WEBRTC_EXCLUDE_BUILT_IN_SSL_ROOT_CERTS
+</code></pre><hr>
+<p><code>rtc_include_ilbc</code> = <code>true</code></p>
+<p>Include the iLBC audio codec?</p>
+<hr>
+<p><code>rtc_include_opus</code> = <code>true</code></p>
+<p>Disable this to avoid building the Opus audio codec.</p>
+<hr>
+<p><code>rtc_opus_support_120ms_ptime</code> = <code>true</code></p>
+<p>Enable this if the Opus version upon which WebRTC is built supports direct encoding of 120 ms packets.</p>
+<hr>
+<p><code>rtc_opus_variable_complexity</code> = <code>false</code></p>
+<p>Enable this to let the Opus audio codec change complexity on the fly.</p>
+<hr>
+<p><code>rtc_enable_external_auth</code> = <code>false</code></p>
+<p>Enable when an external authentication mechanism is used for performing packet authentication for RTP packets instead of libsrtp.</p>
+<pre tabindex="0"><code>#ifdef ENABLE_EXTERNAL_AUTH
+#undef ENABLE_EXTERNAL_AUTH
+#endif
+</code></pre><hr>
+<p><code>apm_debug_dump</code> = <code>false</code></p>
+<p>Selects whether debug dumps for the audio processing module should be generated.</p>
+<hr>
+<p><code>rtc_exclude_audio_processing_module</code> = <code>false</code></p>
+<p>Selects whether the audio processing module should be excluded.</p>
+<pre tabindex="0"><code>#ifdef WEBRTC_EXCLUDE_AUDIO_PROCESSING_MODULE
+#undef WEBRTC_EXCLUDE_AUDIO_PROCESSING_MODULE
+#endif
+</code></pre><hr>
+<p><code>rtc_enable_bwe_test_logging</code> = <code>false</code></p>
+<p>Set this to true to enable BWE test logging.</p>
+<hr>
+<p><code>rtc_build_examples</code> = <code>false</code></p>
+<p>Set this to true to build examples.</p>
+<hr>
+<p><code>rtc_build_tools</code> = <code>true</code></p>
+<p>Set this to false to skip building tools.</p>
+<hr>
+<p><code>rtc_use_x11</code> = <code>false</code></p>
+<p>Set this to false to skip building code that requires X11.</p>
+<hr>
+<p><code>rtc_use_pipewire</code> = &lsquo;false&rsquo;</p>
+<p>Set this to use PipeWire on the Wayland display server. By default it&rsquo;s only enabled on desktop Linux (excludes ChromeOS) and only when using the sysroot as PipeWire is not available in older and supported Ubuntu and Debian distributions.</p>
+<hr>
+<p><code>rtc_link_pipewire</code> = <code>false</code></p>
+<p>Set this to link PipeWire and required libraries directly instead of using the dlopen.</p>
+<hr>
+<p><code>build_with_mozilla</code> = <code>false</code></p>
+<p>Enable to use the Mozilla internal settings.</p>
+<hr>
+<p><code>rtc_enable_android_aaudio</code> = <code>false</code></p>
+<p>Experimental: enable use of Android AAudio which requires Android SDK 26 or above and NDK r16 or above.</p>
+<hr>
+<p><code>rtc_sanitize_coverage</code> = <code>&quot;&quot;</code></p>
+<p>Set to <code>func</code>, <code>block</code>, <code>edge</code> for coverage generation. At unit test runtime set <code>UBSAN_OPTIONS</code>=<code>&quot;coverage=1&quot;</code>. It is recommend to set <code>include_examples=0</code>. Use llvm&rsquo;s <code>sancov -html-report</code> for human readable reports. See <a href="http://clang.llvm.org/docs/SanitizerCoverage.html" target="_blank" rel="noopener">http://clang.llvm.org/docs/SanitizerCoverage.html</a> .</p>
+<hr>
+<p><code>rtc_prefer_fixed_point</code> = current_cpu == <code>arm</code> || current_cpu == <code>arm64</code></p>
+<p>Selects fixed-point code where possible (<code>true</code> for arm and arm64).</p>
+<hr>
+<p><code>rtc_build_with_neon</code> = <code>true</code></p>
+<p>Determines whether NEON code will be built.</p>
+<hr>
+<p><code>rtc_use_h264</code> = <code>false</code></p>
+<p>Enable this to build OpenH264 encoder/FFmpeg decoder. This is supported on all platforms except Android and iOS.</p>
+<pre tabindex="0"><code>#ifdef WEBRTC_USE_H264
+#undef WEBRTC_USE_H264
+#endif
+</code></pre><hr>
+<p><code>rtc_use_absl_mutex</code> = <code>false</code></p>
+<p>Enable this flag to make webrtc::Mutex be implemented by absl::Mutex.</p>
+<pre tabindex="0"><code>#ifdef WEBRTC_ABSL_MUTEX
+#undef WEBRTC_ABSL_MUTEX
+#endif
+</code></pre><hr>
+<p><code>rtc_ios_use_opengl_rendering</code> = <code>is_ios</code> &amp;&amp; target_environment != <code>catalyst</code></p>
+<p>Determines whether OpenGL is available on iOS.</p>
+<hr>
+<p><code>rtc_include_builtin_audio_codecs</code> = <code>true</code></p>
+<p>When set to false, builtin audio encoder/decoder factories and all the audio codecs they depend on will not be included in libwebrtc.{a|lib} (they will still be included in libjingle_peerconnection_so.so and WebRTC.framework)</p>
+<hr>
+<p><code>rtc_include_dav1d_in_internal_decoder_factory</code> = <code>false</code></p>
+<p>Includes the dav1d decoder in the internal decoder factory when set to true.</p>
+<pre tabindex="0"><code>#define RTC_DAV1D_IN_INTERNAL_DECODER_FACTORY
+</code></pre><hr>
+<p><code>rtc_strict_field_trials</code> = <code>&quot;&quot;</code></p>
+<p>When enabled, a run-time check will make sure that all field trial keys have been registered in accordance with the field trial policy, see g3doc/field-trials.md. The value can be set to the following:</p>
+<ul>
+<li>&ldquo;dcheck&rdquo;</li>
+</ul>
+<blockquote>
+<p>RTC_DCHECKs that the field trial has been registered. RTC_DCHECK must be enabled separately.</p>
+</blockquote>
+<ul>
+<li>&ldquo;warn&rdquo;</li>
+</ul>
+<blockquote>
+<p>RTC_LOGs a message with LS_WARNING severity if the field trial hasn&rsquo;t been registered.</p>
+</blockquote>
+<pre tabindex="0"><code>#define WEBRTC_STRICT_FIELD_TRIALS 0 // &#34;&#34;
+#define WEBRTC_STRICT_FIELD_TRIALS 1 // &#34;dcheck&#34;
+#define WEBRTC_STRICT_FIELD_TRIALS 2 // &#34;warn&#34;
+</code></pre><hr>
+<p><code>rtc_enable_protobuf</code> = <code>true</code></p>
+<p>Enables the use of protocol buffers for debug recordings.</p>
+<pre tabindex="0"><code>#define WEBRTC_ENABLE_PROTOBUF 1
+</code></pre><hr>
+<p><code>rtc_enable_sctp</code> = <code>true</code></p>
+<p>Set this to disable building with support for SCTP data channels.</p>
+<pre tabindex="0"><code>#define WEBRTC_HAVE_SCTP
+</code></pre><hr>
+<p><code>rtc_build_json</code> = <code>true</code></p>
+<p><code>rtc_build_libsrtp</code> = <code>true</code></p>
+<p><code>rtc_build_libvpx</code> = <code>true</code></p>
+<hr>
+<p><code>rtc_libvpx_build_vp9</code> = <code>true</code></p>
+<pre tabindex="0"><code>#define RTC_ENABLE_VP9
+</code></pre><hr>
+<p><code>rtc_build_opus</code> = <code>true</code></p>
+<p><code>rtc_build_ssl</code> = <code>true</code></p>
+<p>Disable these to not build components which can be externally provided.</p>
+<hr>
+<p><code>rtc_enable_libevent</code> = <code>false</code></p>
+<p><code>rtc_build_libevent</code> = <code>false</code></p>
+<p>Enable libevent task queues on platforms that support it.</p>
+<hr>
+<p><code>rtc_include_pulse_audio</code> = <code>false</code></p>
+<p>Excluded in Chromium since its prerequisites don&rsquo;t require Pulse Audio.</p>
+<hr>
+<p><code>rtc_include_internal_audio_device</code> = <code>true</code></p>
+<p>Chromium uses its own IO handling, so the internal ADM is only built for standalone WebRTC.</p>
+<pre tabindex="0"><code>#define WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE
+</code></pre><hr>
+<p><code>rtc_enable_avx2</code> = <code>false</code></p>
+<p>Set this to true to enable the avx2 support in webrtc.</p>
+<pre tabindex="0"><code>#define WEBRTC_ENABLE_AVX2
+</code></pre><hr>
+<p><code>rtc_include_tests</code> = <code>false</code></p>
+<p>Set this to true to build the unit tests. Disabled when building with Chromium or Mozilla.</p>
+<pre tabindex="0"><code>#define WEBRTC_NON_STATIC_TRACE_EVENT_HANDLERS 1
+</code></pre><hr>
+<p><code>rtc_use_x11_extensions</code> = <code>false</code></p>
+<p>Set this to false to skip building code that also requires X11 extensions such as Xdamage, Xfixes.</p>
+<hr>
+<p><code>rtc_disable_logging</code> = <code>false</code></p>
+<p>Set this to true to fully remove logging from WebRTC.</p>
+<pre tabindex="0"><code>#ifdef RTC_DISABLE_LOGGING
+#undef RTC_DISABLE_LOGGING
+#endif
+</code></pre><hr>
+<p><code>rtc_disable_trace_events</code> = <code>false</code></p>
+<p>Set this to true to disable trace events.</p>
+<pre tabindex="0"><code>#ifdef RTC_DISABLE_TRACE_EVENTS
+#undef RTC_DISABLE_TRACE_EVENTS
+#endif
+</code></pre><hr>
+<p><code>rtc_disable_check_msg</code> = <code>false</code></p>
+<p>Set this to true to disable detailed error message and logging for RTC_CHECKs.</p>
+<pre tabindex="0"><code>#define RTC_DISABLE_CHECK_MSG
+</code></pre><hr>
+<p><code>rtc_disable_metrics</code> = <code>false</code></p>
+<p>Set this to true to disable webrtc metrics.</p>
+<pre tabindex="0"><code>#ifdef RTC_DISABLE_METRICS
+#undef RTC_DISABLE_METRICS
+#endif
+</code></pre><hr>
+<p><code>rtc_exclude_transient_suppressor</code> = <code>false</code></p>
+<p>Set this to true to exclude the transient suppressor in the audio processing module from the build.</p>
+<pre tabindex="0"><code>#ifdef WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR
+#undef WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR
+#endif
+</code></pre><hr>
+<p><code>rtc_desktop_capture_supported</code> = <code>is_mac</code></p>
+<p>Desktop capturer is supported only on Windows, OSX and Linux.</p>
+<hr>
+<h3 id="additional-defines-based-on-buildconfiggn">Additional defines based on <code>BUILDCONFIG.gn</code><a hidden class="anchor" aria-hidden="true" href="#additional-defines-based-on-buildconfiggn">#</a></h3>
+<p><code>is_ios</code> = current_os == <code>ios</code></p>
+<pre tabindex="0"><code>#define WEBRTC_IOS
+#define WEBRTC_MAC
+</code></pre><hr>
+<p><code>is_mac</code> = current_os == <code>mac</code></p>
+<pre tabindex="0"><code>#define WEBRTC_MAC
+</code></pre><hr>
+<p><code>is_posix</code> = !<code>is_win</code> &amp;&amp; !<code>is_fuchsia</code></p>
+<pre tabindex="0"><code>#define WEBRTC_POSIX
+</code></pre><hr>
+<p>current_cpu == <code>arm64</code></p>
+<pre tabindex="0"><code>#define WEBRTC_ARCH_ARM64
+#define WEBRTC_HAS_NEON
+</code></pre><hr>
+<p>current_cpu == <code>arm</code></p>
+<pre tabindex="0"><code>#define WEBRTC_ARCH_ARM
+#define WEBRTC_HAS_NEON
+</code></pre><hr>
+<p>arm_version &gt;= <code>7</code></p>
+<pre tabindex="0"><code>#define WEBRTC_ARCH_ARM_V7
+</code></pre><hr>
+<p>arm_use_neon == <code>true</code></p>
+<pre tabindex="0"><code>#define WEBRTC_HAS_NEON
+</code></pre><hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2023 <a href="https://ronnyf.github.io/ios-eng">iOS Engineering</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

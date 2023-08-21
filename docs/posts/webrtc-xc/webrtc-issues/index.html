@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Build Issues | iOS Engineering</title>
+<meta name="keywords" content="">
+<meta name="description" content="Back to Article
+All Build Warnings It is currently only possible to specify additional linker settings with unsafeFlags in Package.swift. The use of this flag has the following side effect:
+As the usage of the word “unsafe” implies, Swift Package Manager can&rsquo;t safely determine if the build flags have any negative side effect on the build since certain flags can change the behavior of how it performs a build.
+As some build flags can be exploited for unsupported or malicious behavior, the use of unsafe flags makes the products containing this target ineligible for use by other packages.">
+<meta name="author" content="">
+<link rel="canonical" href="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc-issues/">
+<link crossorigin="anonymous" href="/ios-eng/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/ios-eng/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://ronnyf.github.io/ios-eng/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ronnyf.github.io/ios-eng/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ronnyf.github.io/ios-eng/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ronnyf.github.io/ios-eng/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ronnyf.github.io/ios-eng/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Build Issues" />
+<meta property="og:description" content="Back to Article
+All Build Warnings It is currently only possible to specify additional linker settings with unsafeFlags in Package.swift. The use of this flag has the following side effect:
+As the usage of the word “unsafe” implies, Swift Package Manager can&rsquo;t safely determine if the build flags have any negative side effect on the build since certain flags can change the behavior of how it performs a build.
+As some build flags can be exploited for unsupported or malicious behavior, the use of unsafe flags makes the products containing this target ineligible for use by other packages." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc-issues/" /><meta property="og:image" content="https://ronnyf.github.io/ios-eng"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-08-20T18:00:00-07:00" />
+<meta property="article:modified_time" content="2023-08-20T18:00:00-07:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://ronnyf.github.io/ios-eng"/>
+
+<meta name="twitter:title" content="Build Issues"/>
+<meta name="twitter:description" content="Back to Article
+All Build Warnings It is currently only possible to specify additional linker settings with unsafeFlags in Package.swift. The use of this flag has the following side effect:
+As the usage of the word “unsafe” implies, Swift Package Manager can&rsquo;t safely determine if the build flags have any negative side effect on the build since certain flags can change the behavior of how it performs a build.
+As some build flags can be exploited for unsupported or malicious behavior, the use of unsafe flags makes the products containing this target ineligible for use by other packages."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Posts",
+      "item": "https://ronnyf.github.io/ios-eng/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "",
+      "item": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "Build Issues",
+      "item": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc-issues/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Build Issues",
+  "name": "Build Issues",
+  "description": "Back to Article\nAll Build Warnings It is currently only possible to specify additional linker settings with unsafeFlags in Package.swift. The use of this flag has the following side effect:\nAs the usage of the word “unsafe” implies, Swift Package Manager can\u0026rsquo;t safely determine if the build flags have any negative side effect on the build since certain flags can change the behavior of how it performs a build.\nAs some build flags can be exploited for unsupported or malicious behavior, the use of unsafe flags makes the products containing this target ineligible for use by other packages.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Back to Article\nAll Build Warnings It is currently only possible to specify additional linker settings with unsafeFlags in Package.swift. The use of this flag has the following side effect:\nAs the usage of the word “unsafe” implies, Swift Package Manager can’t safely determine if the build flags have any negative side effect on the build since certain flags can change the behavior of how it performs a build.\nAs some build flags can be exploited for unsupported or malicious behavior, the use of unsafe flags makes the products containing this target ineligible for use by other packages.\nThis applies to all third party dependencies. While the build produces a multitude of warnings, most of which are\nImplicit conversion loses integer precision: 'uint64_t' (aka 'unsigned long long') to 'int32_t' (aka 'int') WebRTC Build Warnings Variable '...' may be uninitialized when used here\nasync_tcp_socket.cc:151:7 physical_socket_server.cc:1496:30 vad_audio_proc.cc:223:64 frame_buffer.cc:267:31 'stream_size' is deprecated\nrtc_event_log_parser.cc:2485:24 Possible misuse of comma operator here\necho_canceller3.cc:785:72 OpenGLES API deprecated.\nRTCDefaultShader RTCEAGLVideoView RTCI420TextureCache RTCNV12TextureCache RTCNV12TextureCache RTCOpenGLDefines RTCShader Static Analysis bugprone-move-forwarding-reference issues Forwarding reference passed to std::move(), which may unexpectedly cause lvalues to be moved; use std::forward() instead In file included from sdk/objc/api/peerconnection/RTCAudioTrack.mm:15: In file included from sdk/objc/api/peerconnection/RTCPeerConnectionFactory+Private.h:13: In file included from api/peer_connection_interface.h:129: In file included from p2p/base/port_allocator.h:22: In file included from p2p/base/port.h:28: In file included from api/transport/field_trial_based_config.h:16: In file included from api/field_trials_registry.h:18: In file included from rtc_base/containers/flat_set.h:19: rtc_base/containers/flat_tree.h:84:9: warning: Forwarding reference passed to std::move(), which may unexpectedly cause lvalues to be moved; use std::forward() instead [bugprone-move-forwarding-reference] lhs = std::move(rhs); ^ 1 warning generated. For a total of 224 build warnings, the static analyzer produced an additional 603 results, which includes all third party dependencies. Some of those seem interesting enough to look into.\n",
+  "wordCount" : "283",
+  "inLanguage": "en",
+  "datePublished": "2023-08-20T18:00:00-07:00",
+  "dateModified": "2023-08-20T18:00:00-07:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc-issues/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "iOS Engineering",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ronnyf.github.io/ios-eng/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://ronnyf.github.io/ios-eng" accesskey="h" title="iOS Engineering (Alt + H)">iOS Engineering</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Build Issues
+    </h1>
+    <div class="post-meta"><span title='2023-08-20 18:00:00 -0700 PDT'>August 20, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><a href="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/main/">Back to Article</a></p>
+<h2 id="all-build-warnings">All Build Warnings<a hidden class="anchor" aria-hidden="true" href="#all-build-warnings">#</a></h2>
+<p>It is currently only possible to specify additional linker settings with <code>unsafeFlags</code> in <code>Package.swift</code>. The use of this flag has the following side effect:</p>
+<blockquote>
+<p>As the usage of the word “unsafe” implies, Swift Package Manager can&rsquo;t safely determine if the build flags have any negative side effect on the build since certain flags can change the behavior of how it performs a build.</p>
+<p>As some build flags can be exploited for unsupported or malicious behavior, the use of unsafe flags makes the products containing this target ineligible for use by other packages.</p>
+</blockquote>
+<p>This applies to all third party dependencies. While the build produces a multitude of warnings, most of which are</p>
+<pre><code>Implicit conversion loses integer precision: 'uint64_t' (aka 'unsigned long long') to 'int32_t' (aka 'int')
+</code></pre>
+<h3 id="webrtc-build-warnings">WebRTC Build Warnings<a hidden class="anchor" aria-hidden="true" href="#webrtc-build-warnings">#</a></h3>
+<p><code>Variable '...' may be uninitialized when used here</code></p>
+<ul>
+<li>async_tcp_socket.cc:151:7</li>
+<li>physical_socket_server.cc:1496:30</li>
+<li>vad_audio_proc.cc:223:64</li>
+<li>frame_buffer.cc:267:31</li>
+</ul>
+<hr>
+<p><code>'stream_size' is deprecated</code></p>
+<ul>
+<li>rtc_event_log_parser.cc:2485:24</li>
+</ul>
+<hr>
+<p><code>Possible misuse of comma operator here</code></p>
+<ul>
+<li>echo_canceller3.cc:785:72</li>
+</ul>
+<hr>
+<p><code>OpenGLES API deprecated.</code></p>
+<ul>
+<li>RTCDefaultShader</li>
+<li>RTCEAGLVideoView</li>
+<li>RTCI420TextureCache</li>
+<li>RTCNV12TextureCache</li>
+<li>RTCNV12TextureCache</li>
+<li>RTCOpenGLDefines</li>
+<li>RTCShader</li>
+</ul>
+<h2 id="static-analysis">Static Analysis<a hidden class="anchor" aria-hidden="true" href="#static-analysis">#</a></h2>
+<h3 id="bugprone-move-forwarding-reference-issues">bugprone-move-forwarding-reference issues<a hidden class="anchor" aria-hidden="true" href="#bugprone-move-forwarding-reference-issues">#</a></h3>
+<pre><code>Forwarding reference passed to std::move(), which may unexpectedly cause lvalues to be moved; use std::forward() instead
+</code></pre>
+<ul>
+<li>In file included from sdk/objc/api/peerconnection/RTCAudioTrack.mm:15:</li>
+<li>In file included from sdk/objc/api/peerconnection/RTCPeerConnectionFactory+Private.h:13:</li>
+<li>In file included from api/peer_connection_interface.h:129:</li>
+<li>In file included from p2p/base/port_allocator.h:22:</li>
+<li>In file included from p2p/base/port.h:28:</li>
+<li>In file included from api/transport/field_trial_based_config.h:16:</li>
+<li>In file included from api/field_trials_registry.h:18:</li>
+<li>In file included from rtc_base/containers/flat_set.h:19:</li>
+</ul>
+<pre tabindex="0"><code>rtc_base/containers/flat_tree.h:84:9: warning: Forwarding reference passed to std::move(), which may unexpectedly cause lvalues to be moved; use std::forward() instead [bugprone-move-forwarding-reference]
+  lhs = std::move(rhs);
+        ^
+1 warning generated.
+</code></pre><p>For a total of <strong>224</strong> build warnings, the static analyzer produced an additional <strong>603</strong> results, which includes all third party dependencies. Some of those seem interesting enough to look into.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2023 <a href="https://ronnyf.github.io/ios-eng">iOS Engineering</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

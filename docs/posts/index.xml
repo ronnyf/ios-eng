@@ -10,6 +10,7 @@
       <link>https://ronnyf.github.io/ios-eng</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://ronnyf.github.io/ios-eng/posts/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Sun, 20 Aug 2023 18:00:00 -0700</lastBuildDate><atom:link href="https://ronnyf.github.io/ios-eng/posts/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
