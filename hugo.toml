@@ -1,4 +1,4 @@
-baseURL = 'https://ronnyf.github.io/ios-eng'
+baseURL = 'https://ioseng.rfxsoftware.com/ios-eng'
 languageCode = 'en-us'
 title = 'iOS Engineering'
 theme = 'github.com/adityatelange/hugo-PaperMod'
