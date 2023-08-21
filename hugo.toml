@@ -1,7 +1,8 @@
-baseURL = '/'
+baseURL = 'https://ronnyf.github.io/ios-eng'
 languageCode = 'en-us'
 title = 'iOS Engineering'
 theme = 'github.com/adityatelange/hugo-PaperMod'
+publishDir = 'public'
 
 [params]
   # color style
