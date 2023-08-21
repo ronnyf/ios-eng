@@ -10,15 +10,15 @@
 <meta name="description" content="Back to Article
 api/adaptation/resource.cc api/audio_codecs/audio_codec_pair_id.cc api/audio_codecs/audio_decoder.cc api/audio_codecs/audio_encoder.cc api/audio_codecs/audio_format.cc api/audio_codecs/builtin_audio_decoder_factory.cc api/audio_codecs/builtin_audio_encoder_factory.cc api/audio_codecs/g711/audio_decoder_g711.cc api/audio_codecs/g711/audio_encoder_g711.cc api/audio_codecs/g722/audio_decoder_g722.cc api/audio_codecs/g722/audio_encoder_g722.cc api/audio_codecs/ilbc/audio_decoder_ilbc.cc api/audio_codecs/ilbc/audio_encoder_ilbc.cc api/audio_codecs/L16/audio_decoder_L16.cc api/audio_codecs/L16/audio_encoder_L16.cc api/audio_codecs/opus_audio_decoder_factory.cc api/audio_codecs/opus_audio_encoder_factory.cc api/audio_codecs/opus/audio_decoder_multi_channel_opus.cc api/audio_codecs/opus/audio_decoder_opus.cc api/audio_codecs/opus/audio_encoder_multi_channel_opus_config.cc api/audio_codecs/opus/audio_encoder_multi_channel_opus.cc api/audio_codecs/opus/audio_encoder_opus_config.cc api/audio_codecs/opus/audio_encoder_opus.cc api/audio_options.cc api/audio/audio_frame.cc api/audio/channel_layout.cc api/audio/echo_canceller3_config_json.cc api/audio/echo_canceller3_config.cc api/audio/echo_canceller3_factory.cc api/audio/echo_detector_creator.cc api/call/transport.cc api/candidate.cc api/create_peerconnection_factory.cc api/crypto/crypto_options.cc api/data_channel_interface.cc api/dtls_transport_interface.cc api/field_trials_registry.cc api/field_trials.cc api/frame_transformer_factory.cc api/ice_transport_factory.cc api/jsep_ice_candidate.cc api/jsep.cc api/legacy_stats_types.cc api/media_stream_interface.cc api/media_types.cc api/neteq/custom_neteq_factory.cc api/neteq/default_neteq_controller_factory.cc api/neteq/neteq.cc api/neteq/tick_timer.cc api/numerics/samples_stats_counter.cc api/peer_connection_interface.cc api/rtc_error.cc api/rtc_event_log_output_file.cc api/rtc_event_log/rtc_event_log_factory.cc api/rtc_event_log/rtc_event_log.cc api/rtc_event_log/rtc_event.cc api/rtp_headers.cc api/rtp_packet_info.cc api/rtp_parameters.cc api/rtp_receiver_interface.cc api/rtp_sender_interface.cc api/rtp_transceiver_interface.cc api/sctp_transport_interface.cc api/task_queue/default_task_queue_factory_gcd.cc api/task_queue/default_task_queue_factory_libevent.cc api/task_queue/default_task_queue_factory_stdlib_or_libevent_experiment.cc api/task_queue/default_task_queue_factory_stdlib.cc api/task_queue/pending_task_safety_flag.">
 <meta name="author" content="">
-<link rel="canonical" href="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc-core-sources/">
-<link crossorigin="anonymous" href="/ios-eng/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
+<link rel="canonical" href="https://ioseng.rfxsoftware.com/ios-eng/posts/webrtc-xc/webrtc-core-sources/">
+<link crossorigin="anonymous" href="/ios-eng/assets/css/stylesheet.5cfc680b1eeaeef9efbced92d46c2a9e876b72ee14fba85846afc4cff9e6e6f8.css" integrity="sha256-XPxoCx7q7vnvvO2S1Gwqnodrcu4U&#43;6hYRq/Ez/nm5vg=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/ios-eng/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
     onload="hljs.initHighlightingOnLoad();"></script>
-<link rel="icon" href="https://ronnyf.github.io/ios-eng/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ronnyf.github.io/ios-eng/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ronnyf.github.io/ios-eng/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://ronnyf.github.io/ios-eng/apple-touch-icon.png">
-<link rel="mask-icon" href="https://ronnyf.github.io/ios-eng/safari-pinned-tab.svg">
+<link rel="icon" href="https://ioseng.rfxsoftware.com/ios-eng/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ioseng.rfxsoftware.com/ios-eng/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ioseng.rfxsoftware.com/ios-eng/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ioseng.rfxsoftware.com/ios-eng/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ioseng.rfxsoftware.com/ios-eng/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
 <noscript>
@@ -61,12 +61,12 @@ api/adaptation/resource.cc api/audio_codecs/audio_codec_pair_id.cc api/audio_cod
 <meta property="og:description" content="Back to Article
 api/adaptation/resource.cc api/audio_codecs/audio_codec_pair_id.cc api/audio_codecs/audio_decoder.cc api/audio_codecs/audio_encoder.cc api/audio_codecs/audio_format.cc api/audio_codecs/builtin_audio_decoder_factory.cc api/audio_codecs/builtin_audio_encoder_factory.cc api/audio_codecs/g711/audio_decoder_g711.cc api/audio_codecs/g711/audio_encoder_g711.cc api/audio_codecs/g722/audio_decoder_g722.cc api/audio_codecs/g722/audio_encoder_g722.cc api/audio_codecs/ilbc/audio_decoder_ilbc.cc api/audio_codecs/ilbc/audio_encoder_ilbc.cc api/audio_codecs/L16/audio_decoder_L16.cc api/audio_codecs/L16/audio_encoder_L16.cc api/audio_codecs/opus_audio_decoder_factory.cc api/audio_codecs/opus_audio_encoder_factory.cc api/audio_codecs/opus/audio_decoder_multi_channel_opus.cc api/audio_codecs/opus/audio_decoder_opus.cc api/audio_codecs/opus/audio_encoder_multi_channel_opus_config.cc api/audio_codecs/opus/audio_encoder_multi_channel_opus.cc api/audio_codecs/opus/audio_encoder_opus_config.cc api/audio_codecs/opus/audio_encoder_opus.cc api/audio_options.cc api/audio/audio_frame.cc api/audio/channel_layout.cc api/audio/echo_canceller3_config_json.cc api/audio/echo_canceller3_config.cc api/audio/echo_canceller3_factory.cc api/audio/echo_detector_creator.cc api/call/transport.cc api/candidate.cc api/create_peerconnection_factory.cc api/crypto/crypto_options.cc api/data_channel_interface.cc api/dtls_transport_interface.cc api/field_trials_registry.cc api/field_trials.cc api/frame_transformer_factory.cc api/ice_transport_factory.cc api/jsep_ice_candidate.cc api/jsep.cc api/legacy_stats_types.cc api/media_stream_interface.cc api/media_types.cc api/neteq/custom_neteq_factory.cc api/neteq/default_neteq_controller_factory.cc api/neteq/neteq.cc api/neteq/tick_timer.cc api/numerics/samples_stats_counter.cc api/peer_connection_interface.cc api/rtc_error.cc api/rtc_event_log_output_file.cc api/rtc_event_log/rtc_event_log_factory.cc api/rtc_event_log/rtc_event_log.cc api/rtc_event_log/rtc_event.cc api/rtp_headers.cc api/rtp_packet_info.cc api/rtp_parameters.cc api/rtp_receiver_interface.cc api/rtp_sender_interface.cc api/rtp_transceiver_interface.cc api/sctp_transport_interface.cc api/task_queue/default_task_queue_factory_gcd.cc api/task_queue/default_task_queue_factory_libevent.cc api/task_queue/default_task_queue_factory_stdlib_or_libevent_experiment.cc api/task_queue/default_task_queue_factory_stdlib.cc api/task_queue/pending_task_safety_flag." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc-core-sources/" /><meta property="og:image" content="https://ronnyf.github.io/ios-eng"/><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://ioseng.rfxsoftware.com/ios-eng/posts/webrtc-xc/webrtc-core-sources/" /><meta property="og:image" content="https://ioseng.rfxsoftware.com/ios-eng"/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-08-20T18:00:00-07:00" />
 <meta property="article:modified_time" content="2023-08-20T18:00:00-07:00" />
 
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://ronnyf.github.io/ios-eng"/>
+<meta name="twitter:image" content="https://ioseng.rfxsoftware.com/ios-eng"/>
 
 <meta name="twitter:title" content="CoreRTC Source Files"/>
 <meta name="twitter:description" content="Back to Article
@@ -82,19 +82,19 @@ api/adaptation/resource.cc api/audio_codecs/audio_codec_pair_id.cc api/audio_cod
       "@type": "ListItem",
       "position":  2 ,
       "name": "Posts",
-      "item": "https://ronnyf.github.io/ios-eng/posts/"
+      "item": "https://ioseng.rfxsoftware.com/ios-eng/posts/"
     }, 
     {
       "@type": "ListItem",
       "position":  3 ,
       "name": "",
-      "item": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/"
+      "item": "https://ioseng.rfxsoftware.com/ios-eng/posts/webrtc-xc/"
     }, 
     {
       "@type": "ListItem",
       "position":  4 ,
       "name": "CoreRTC Source Files",
-      "item": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc-core-sources/"
+      "item": "https://ioseng.rfxsoftware.com/ios-eng/posts/webrtc-xc/webrtc-core-sources/"
     }
   ]
 }
@@ -116,14 +116,14 @@ api/adaptation/resource.cc api/audio_codecs/audio_codec_pair_id.cc api/audio_cod
   "dateModified": "2023-08-20T18:00:00-07:00",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://ronnyf.github.io/ios-eng/posts/webrtc-xc/webrtc-core-sources/"
+    "@id": "https://ioseng.rfxsoftware.com/ios-eng/posts/webrtc-xc/webrtc-core-sources/"
   },
   "publisher": {
     "@type": "Organization",
     "name": "iOS Engineering",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://ronnyf.github.io/ios-eng/favicon.ico"
+      "url": "https://ioseng.rfxsoftware.com/ios-eng/favicon.ico"
     }
   }
 }
@@ -145,7 +145,7 @@ api/adaptation/resource.cc api/audio_codecs/audio_codec_pair_id.cc api/audio_cod
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://ronnyf.github.io/ios-eng" accesskey="h" title="iOS Engineering (Alt + H)">iOS Engineering</a>
+            <a href="https://ioseng.rfxsoftware.com/ios-eng" accesskey="h" title="iOS Engineering (Alt + H)">iOS Engineering</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -185,7 +185,7 @@ api/adaptation/resource.cc api/audio_codecs/audio_codec_pair_id.cc api/audio_cod
 
 </div>
   </header> 
-  <div class="post-content"><p><a href="https://ronnyf.github.io/ios-eng/posts/webrtc-xc/main/#corertc">Back to Article</a></p>
+  <div class="post-content"><p><a href="https://ioseng.rfxsoftware.com/ios-eng/posts/webrtc-xc/main/#corertc">Back to Article</a></p>
 <ul>
 <li>api/adaptation/resource.cc</li>
 <li>api/audio_codecs/audio_codec_pair_id.cc</li>
@@ -1531,7 +1531,7 @@ api/adaptation/resource.cc api/audio_codecs/audio_codec_pair_id.cc api/audio_cod
     </main>
     
 <footer class="footer">
-    <span>&copy; 2023 <a href="https://ronnyf.github.io/ios-eng">iOS Engineering</a></span>
+    <span>&copy; 2023 <a href="https://ioseng.rfxsoftware.com/ios-eng">iOS Engineering</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &

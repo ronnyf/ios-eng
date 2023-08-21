@@ -1,7 +1,7 @@
 baseURL = 'https://ioseng.rfxsoftware.com/ios-eng'
 languageCode = 'en-us'
 title = 'iOS Engineering'
-theme = 'github.com/adityatelange/hugo-PaperMod'
+theme = 'hugo-PaperMod'
 publishDir = 'docs'
 
 [params]
@@ -9,7 +9,7 @@ publishDir = 'docs'
   color = 'linen' # linen, wheat, gray, light
 
   # home page profile
-  avatar = 'GRAVATAR_EMAIL' # gravatar email or image url
+  avatar = 'ronny@rfxsoftware.com' # gravatar email or image url
   name = 'RonnyF'
   bio = 'iOS Engineer'
 
