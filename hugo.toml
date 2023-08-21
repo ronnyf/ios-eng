@@ -1,4 +1,4 @@
-baseURL = 'https://ioseng.rfxsoftware.com'
+baseURL = 'https://www.rfxsoftware.com'
 languageCode = 'en-us'
 title = 'iOS Engineering'
 publishDir = 'docs'
