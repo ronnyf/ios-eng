@@ -2,15 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on iOS Engineering</title>
-    <link>https://ioseng.rfxsoftware.com/ios-eng/posts/</link>
+    <link>https://www.rfxsoftware.com/posts/</link>
     <description>Recent content in Posts on iOS Engineering</description>
     <image>
       <title>iOS Engineering</title>
-      <url>https://ioseng.rfxsoftware.com/ios-eng</url>
-      <link>https://ioseng.rfxsoftware.com/ios-eng</link>
+      <url>https://www.rfxsoftware.com</url>
+      <link>https://www.rfxsoftware.com</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 20 Aug 2023 18:00:00 -0700</lastBuildDate><atom:link href="https://ioseng.rfxsoftware.com/ios-eng/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 20 Aug 2023 18:00:00 -0700</lastBuildDate><atom:link href="https://www.rfxsoftware.com/posts/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
