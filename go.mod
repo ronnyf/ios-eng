@@ -1,9 +1,8 @@
-module github.com/ronnyf/ronnyf.github.io
+module github.com/ronnyf/ios-eng
 
 go 1.20
 
 require (
-	github.com/adityatelange/hugo-PaperMod v0.0.0-20230723084445-6f29d35d7367 // indirect
 	github.com/hugomods/icons v0.6.0 // indirect
 	github.com/hugomods/images v0.7.0 // indirect
 	github.com/hugomods/search v0.4.4 // indirect
