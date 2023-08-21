@@ -1,3 +1,12 @@
 [submodule "themes/hugo-PaperMod"]
 	path = themes/hugo-PaperMod
 	url = https://github.com/ronnyf/hugo-PaperMod.git
+[submodule "themes/Niello"]
+	path = themes/Niello
+	url = https://github.com/guangmean/Niello.git
+[submodule "themes/sk3"]
+	path = themes/sk3
+	url = https://github.com/J-Siu/hugo-theme-sk3
+[submodule "themes/amperage"]
+	path = themes/amperage
+	url = https://github.com/asurcodes/amperage.git

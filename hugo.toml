@@ -1,12 +1,14 @@
 baseURL = 'https://ioseng.rfxsoftware.com/ios-eng'
 languageCode = 'en-us'
 title = 'iOS Engineering'
-theme = 'hugo-PaperMod'
 publishDir = 'docs'
+staticDir = ["static", "themes/Niello/static"]
+
+theme = "hugo-PaperMod"
 
 [params]
   # color style
-  color = 'linen' # linen, wheat, gray, light
+  # color = 'linen' # linen, wheat, gray, light
 
   # home page profile
   avatar = 'ronny@rfxsoftware.com' # gravatar email or image url
