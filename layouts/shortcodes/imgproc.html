@@ -1,0 +1,2 @@
+{{ $image := resources.GetMatch (.Get 0) }}
+<img src="{{ $image.RelPermalink }}" width="{{ $image.Width }}" height="{{ $image.Height }}">
