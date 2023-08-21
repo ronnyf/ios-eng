@@ -4,6 +4,8 @@ title = 'iOS Engineering'
 publishDir = 'docs'
 staticDir = ["static", "themes/Niello/static"]
 
+googleAnalytics = 'G-4FC8CCB4QQ'
+
 theme = "hugo-PaperMod"
 
 [params]
