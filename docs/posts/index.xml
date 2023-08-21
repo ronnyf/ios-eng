@@ -2,14 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on iOS Engineering</title>
-    <link>/posts/</link>
+    <link>https://ronnyf.github.io/ios-eng/posts/</link>
     <description>Recent content in Posts on iOS Engineering</description>
     <image>
       <title>iOS Engineering</title>
-      <url>/</url>
-      <link>/</link>
+      <url>https://ronnyf.github.io/ios-eng</url>
+      <link>https://ronnyf.github.io/ios-eng</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="https://ronnyf.github.io/ios-eng/posts/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
