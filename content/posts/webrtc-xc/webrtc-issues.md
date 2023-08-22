@@ -19,6 +19,8 @@ This applies to all third party dependencies. While the build produces a multitu
 
     Implicit conversion loses integer precision: 'uint64_t' (aka 'unsigned long long') to 'int32_t' (aka 'int')
 
+{{< adsense-feed >}}
+
 ### WebRTC Build Warnings
 
 `Variable '...' may be uninitialized when used here`
@@ -41,6 +43,8 @@ This applies to all third party dependencies. While the build produces a multitu
 - RTCNV12TextureCache
 - RTCOpenGLDefines
 - RTCShader
+
+{{< adsense-feed >}}
 
 ## Static Analysis
 
@@ -65,3 +69,5 @@ rtc_base/containers/flat_tree.h:84:9: warning: Forwarding reference passed to st
 ```
 
 For a total of **224** build warnings, the static analyzer produced an additional **603** results, which includes all third party dependencies. Some of those seem interesting enough to look into.
+
+{{< adsense-feed >}}

@@ -4,12 +4,28 @@
     <title>Tags on iOS Engineering</title>
     <link>https://www.rfxsoftware.com/tags/</link>
     <description>Recent content in Tags on iOS Engineering</description>
-    <image>
-      <title>iOS Engineering</title>
-      <url>https://www.rfxsoftware.com</url>
-      <link>https://www.rfxsoftware.com</link>
-    </image>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://www.rfxsoftware.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Sun, 20 Aug 2023 18:00:00 -0700</lastBuildDate><atom:link href="https://www.rfxsoftware.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WebRTC</title>
+      <link>https://www.rfxsoftware.com/tags/webrtc/</link>
+      <pubDate>Sun, 20 Aug 2023 18:00:00 -0700</pubDate>
+      
+      <guid>https://www.rfxsoftware.com/tags/webrtc/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Xcode</title>
+      <link>https://www.rfxsoftware.com/tags/xcode/</link>
+      <pubDate>Sun, 20 Aug 2023 18:00:00 -0700</pubDate>
+      
+      <guid>https://www.rfxsoftware.com/tags/xcode/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
   </channel>
 </rss>

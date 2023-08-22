@@ -22,3 +22,5 @@ quality stereo music.
 A new Swift package was created to build static and dynamic libraries with Xcode / SwiftPM.
 
 https://github.com/ronnyf/libopus/blob/release/webrtc/Package.swift
+
+{{< adsense-feed >}}

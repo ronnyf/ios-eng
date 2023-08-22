@@ -17,3 +17,5 @@ This is a brand new algorithm to leverage SIMD for fast UTF-8 string validation.
 A new Swift package was created to build static and dynamic libraries with Xcode / SwiftPM.
 
 https://github.com/ronnyf/utf8_range/blob/release/webrtc/Package.swift
+
+{{< adsense-feed >}}

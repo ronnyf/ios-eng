@@ -11,125 +11,143 @@ _build:
 
 1: Make sure that we have Apple's `TargetConditionals` header.
 
-```
+{{< highlight objective-c "lineNos=false" >}}
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #else
 #error The purpose of this is to build WebRTC with Xcode
 #endif // __APPLE__
-```
+{{< / highlight >}}
+
+{{< adsense-feed >}}
 
 ### Platform defines
 
 Defining `WEBRTC_POSIX` and `WEBRTC_MAC` and `WEBRTC_IOS`. Since Xcode is the build tool of choice for this, `WEBRTC_POSIX` and `WEBRTC_MAC` are always defined by default.
 
-```
+{{< highlight objective-c "lineNos=false" >}}
 #ifndef WEBRTC_POSIX
 #define WEBRTC_POSIX
 #endif
-```
+{{< / highlight >}}
 
-```
+{{< highlight objective-c "lineNos=false" >}}
 #ifndef WEBRTC_MAC
 #define WEBRTC_MAC
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if TARGET_OS_IOS || TARGET_OS_SIMULATOR
 #define WEBRTC_IOS
 #else
 #undef WEBRTC_IOS
 #endif
-```
+{{< / highlight >}}
 
 ### CPU architecture based definitions 
 
 #### ARM / ARM64
-```
+{{< highlight objective-c "lineNos=false" >}}
 #if TARGET_CPU_ARM64 && !defined(WEBRTC_ARCH_ARM64)
 #define WEBRTC_ARCH_ARM64
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if TARGET_CPU_ARM && !defined(WEBRTC_ARCH_ARM)
 #define WEBRTC_ARCH_ARM
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if __ARM_ARCH == 7 && !defined(WEBRTC_ARCH_ARM_V7)
 #define WEBRTC_ARCH_ARM_V7
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if __ARM_ARCH_7S__ && !defined(WEBRTC_ARCH_ARM_V7S)
 #define WEBRTC_ARCH_ARM_V7S
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if __ARM_NEON && !defined(WEBRTC_HAS_NEON)
 #define WEBRTC_HAS_NEON
 #endif
-```
+{{< / highlight >}}
+
+{{< adsense-feed >}}
 
 #### X86 / X86_64
 
-```
+{{< highlight objective-c "lineNos=false" >}}
 #if TARGET_CPU_X86 && !defined(WEBRTC_ARCH_X86_FAMILY)
 #define WEBRTC_ARCH_X86_FAMILY
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if TARGET_CPU_X86_64 && !defined(WEBRTC_ARCH_X86_FAMILY)
 #define WEBRTC_ARCH_X86_FAMILY
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if TARGET_CPU_X86_64 && !defined(WEBRTC_ARCH_X86_64)
 #define WEBRTC_ARCH_X86_64
 #endif
-```
+{{< / highlight >}}
 
 #### Additional Vector Extensions for X86
 
-```
+{{< highlight objective-c "lineNos=false" >}}
 #if __MMX__
 #define WEBRTC_HAS_MMX
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if __SSE2__
 #define WEBRTC_HAS_SSE2
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if __SSE3__
 #define WEBRTC_HAS_SSE3
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if __SSE4_1__
 #define WEBRTC_HAS_SSE4_1
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if __SSSE3__
 #define WEBRTC_HAS_SSSE3
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #if __AVX2__
 #define WEBRTC_HAS_AVX2
 #define WEBRTC_ENABLE_AVX2
 #endif
-```
+{{< / highlight >}}
+
+{{< adsense-feed >}}
 
 ##### AVX and Xcode
 
 The following Xcode setting allows enabling of vector extensions:
 
-```
+{{< highlight bash "lineNos=false" >}}
 CLANG_X86_VECTOR_INSTRUCTIONS = $(DEFAULT_SSE_LEVEL_4_2_$(GCC_ENABLE_SSE42_EXTENSIONS))
-```
+{{< / highlight >}}
 
 By default, Xcode enables `SSE4.2` extensions, which include `MMX`, `SSE2`, `SSE3` but **NOT** `AVX2`nor `FMA`. Those are enabled via the `-m` compiler flag `(-mavx2 -mfma)` in the Google build.
 
@@ -137,7 +155,7 @@ Run the following command in your favorite terminal app on `macOS` with Xcode + 
 
 For example, on a M1 MacBook Pro, with Xcode 14.3 installed, Apple's clang compiler indeed supports all those `SSE` instructions ... and also something called `SSSE3`. 
 
-```
+{{< highlight bash "lineNos=false" >}}
 g++ -arch x86_64 -dM -E - </dev/null | egrep -i '(sse|avx|fma|x86)'
 
 #define __SSE2_MATH__ 1
@@ -149,11 +167,11 @@ g++ -arch x86_64 -dM -E - </dev/null | egrep -i '(sse|avx|fma|x86)'
 #define __SSSE3__ 1
 #define __x86_64 1
 #define __x86_64__ 1
-```
+{{< / highlight >}}
 
 Judging by the output, `AVX2` support is not enabled by default. The compiler definitely has the ability to create `AVX2` instructions when those are enabled explicitly.
 
-```
+{{< highlight bash "lineNos=false" >}}
 g++ -arch x86_64 -mavx2 -mfma -dM -E - </dev/null | egrep -i '(sse|avx|fma|x86)'
 
 #define __AVX2__ 1
@@ -169,11 +187,13 @@ g++ -arch x86_64 -mavx2 -mfma -dM -E - </dev/null | egrep -i '(sse|avx|fma|x86)'
 #define __SSSE3__ 1
 #define __x86_64 1
 #define __x86_64__ 1
-```
+{{< / highlight >}}
+
+{{< adsense-feed >}}
 
 When building for `arm64`, some other features are of interest.
 
-```
+{{< highlight bash "lineNos=false" >}}
 g++ -arch arm64 -dM -E - </dev/null | egrep -i '(arm|crc)'
 
 #define __ARM64_ARCH_8__ 1
@@ -222,13 +242,13 @@ g++ -arch arm64 -dM -E - </dev/null | egrep -i '(arm|crc)'
 #define __ARM_SIZEOF_WCHAR_T 4
 #define __arm64 1
 #define __arm64__ 1
-```
+{{< / highlight >}}
 
 ### WebRTC Feature Defines
 
 The following defines seem to be reasonable choice and result in a functional library.
 
-```
+{{< highlight objective-c "lineNos=false" >}}
 #define HAVE_WEBRTC_VIDEO
 #define OPENSSL_IS_BORINGSSL
 #define WEBRTC_APM_DEBUG_DUMP 1
@@ -244,32 +264,37 @@ The following defines seem to be reasonable choice and result in a functional li
 #define WEBRTC_STRICT_FIELD_TRIALS 0
 #define WEBRTC_USE_BUILTIN_ILBC 1
 #define WEBRTC_USE_BUILTIN_OPUS 1
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #ifdef RTC_USE_LIBAOM_AV1_ENCODER
 #undef RTC_USE_LIBAOM_AV1_ENCODER
 #endif
-```
-```
+{{< / highlight >}}
+
+{{< highlight objective-c "lineNos=false" >}}
 #ifdef WEBRTC_USE_H264
 #error Let's use the built-in HW encoder/decoder.
 #endif
-```
+{{< / highlight >}}
 
 It should be noted that WebRTC is defaulting to its `DummyVideoDevice` without setting:
 
-```
+{{< highlight objective-c "lineNos=false" >}}
 #define HAVE_WEBRTC_VIDEO
-```
+{{< / highlight >}}
+
+{{< adsense-feed >}}
 
 #### Disabled Features
 
-```
+{{< highlight bash "lineNos=false" >}}
 //#define RTC_DAV1D_IN_INTERNAL_DECODER_FACTORY
 //#define RTC_ENABLE_VP8
 //#define RTC_ENABLE_VP9
-```
-```
+{{< / highlight >}}
+
+{{< highlight bash "lineNos=false" >}}
 //#define AECM_WITH_ABS_APPROX
 //#define WEBRTC_DUMMY_FILE_DEVICES
 //#define WEBRTC_EXCLUDE_AUDIO_PROCESSING_MODULE
@@ -278,4 +303,4 @@ It should be noted that WebRTC is defaulting to its `DummyVideoDevice` without s
 //#define WEBRTC_UNIT_TEST
 //#define WEBRTC_USE_CRYPTO_BUFFER_CALLBACK
 //#define WEBRTC_USE_GIO
-```
+{{< / highlight >}}

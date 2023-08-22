@@ -17,9 +17,9 @@ The build system uses those configuration values to determine which `#define` to
 
 Setting this to true will make RTC_EXPORT (see rtc_base/system/rtc_export.h) expand to code that will manage symbols visibility.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_ENABLE_SYMBOL_EXPORT
-```
+{{< / highlight >}}
 
 ---
 
@@ -27,20 +27,22 @@ Setting this to true will make RTC_EXPORT (see rtc_base/system/rtc_export.h) exp
 
 Setting this to true will make RTC_OBJC_EXPORT expand to code that will manage symbols visibility. By default, Obj-C/Obj-C++ symbols are exported if C++ symbols are but setting this arg to true while keeping `rtc_enable_symbol_export`= `false` will only export `RTC_OBJC_EXPORT` annotated symbols.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_ENABLE_OBJC_SYMBOL_EXPORT
-```
+{{< / highlight >}}
 
 ---
+
+{{< adsense-feed >}}
 
 `rtc_dlog_always_on` = `false`
 
 Setting this to true, will make RTC_DLOG() expand to log statements instead of being removed by the preprocessor.
 This is useful for example to be able to get *RTC_DLOGs* on a release build.
 
-```
+{{< highlight bash "lineNos=false" >}}
  #define DLOG_ALWAYS_ON
- ```
+{{< / highlight >}}
 
 ---
 
@@ -70,13 +72,15 @@ Setting this to true will define `WEBRTC_EXCLUDE_SYSTEM_TIME` which will tell th
 
 ---
 
+{{< adsense-feed >}}
+
 `rtc_builtin_ssl_root_certificates` = `true`
 
 Setting this to `false` will require the API user to pass in their own `SSLCertificateVerifier` to verify the certificates presented from a TLS-TURN server. In return disabling this **saves around 100kb** in the binary.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_EXCLUDE_BUILT_IN_SSL_ROOT_CERTS
-```
+{{< / highlight >}}
 
 ---
 
@@ -104,15 +108,17 @@ Enable this to let the Opus audio codec change complexity on the fly.
 
 ---
 
+{{< adsense-feed >}}
+
 `rtc_enable_external_auth` = `false`
 
 Enable when an external authentication mechanism is used for performing packet authentication for RTP packets instead of libsrtp.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #ifdef ENABLE_EXTERNAL_AUTH
 #undef ENABLE_EXTERNAL_AUTH
 #endif
-```
+{{< / highlight >}}
 
 ---
 
@@ -126,11 +132,11 @@ Selects whether debug dumps for the audio processing module should be generated.
 
 Selects whether the audio processing module should be excluded.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #ifdef WEBRTC_EXCLUDE_AUDIO_PROCESSING_MODULE
 #undef WEBRTC_EXCLUDE_AUDIO_PROCESSING_MODULE
 #endif
-```
+{{< / highlight >}}
 
 ---
 
@@ -182,6 +188,8 @@ Experimental: enable use of Android AAudio which requires Android SDK 26 or abov
 
 ---
 
+{{< adsense-feed >}}
+
 `rtc_sanitize_coverage` = `""`
 
 Set to `func`, `block`, `edge` for coverage generation. At unit test runtime set `UBSAN_OPTIONS`=`"coverage=1"`. It is recommend to set `include_examples=0`. Use llvm's `sancov -html-report` for human readable reports. See http://clang.llvm.org/docs/SanitizerCoverage.html .
@@ -204,11 +212,11 @@ Determines whether NEON code will be built.
 
 Enable this to build OpenH264 encoder/FFmpeg decoder. This is supported on all platforms except Android and iOS.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #ifdef WEBRTC_USE_H264
 #undef WEBRTC_USE_H264
 #endif
-```
+{{< / highlight >}}
 
 ---
 
@@ -216,13 +224,15 @@ Enable this to build OpenH264 encoder/FFmpeg decoder. This is supported on all p
 
 Enable this flag to make webrtc::Mutex be implemented by absl::Mutex.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #ifdef WEBRTC_ABSL_MUTEX
 #undef WEBRTC_ABSL_MUTEX
 #endif
-```
+{{< / highlight >}}
 
 ---
+
+{{< adsense-feed >}}
 
 `rtc_ios_use_opengl_rendering` = `is_ios` && target_environment != `catalyst`
 
@@ -240,9 +250,9 @@ When set to false, builtin audio encoder/decoder factories and all the audio cod
 
 Includes the dav1d decoder in the internal decoder factory when set to true.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define RTC_DAV1D_IN_INTERNAL_DECODER_FACTORY
-```
+{{< / highlight >}}
 
 ---
 
@@ -256,21 +266,23 @@ When enabled, a run-time check will make sure that all field trial keys have bee
 - "warn" 
 > RTC_LOGs a message with LS_WARNING severity if the field trial hasn't been registered.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_STRICT_FIELD_TRIALS 0 // ""
 #define WEBRTC_STRICT_FIELD_TRIALS 1 // "dcheck"
 #define WEBRTC_STRICT_FIELD_TRIALS 2 // "warn"
-```
+{{< / highlight >}}
 
 ---
+
+{{< adsense-feed >}}
 
 `rtc_enable_protobuf` = `true`
 
 Enables the use of protocol buffers for debug recordings.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_ENABLE_PROTOBUF 1
-```
+{{< / highlight >}}
 
 ---
 
@@ -278,9 +290,9 @@ Enables the use of protocol buffers for debug recordings.
 
 Set this to disable building with support for SCTP data channels.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_HAVE_SCTP
-```
+{{< / highlight >}}
 
 ---
 
@@ -294,9 +306,10 @@ Set this to disable building with support for SCTP data channels.
 
 `rtc_libvpx_build_vp9` = `true`
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define RTC_ENABLE_VP9
-```
+{{< / highlight >}}
+
 ---
 
 `rtc_build_opus` = `true`
@@ -315,6 +328,8 @@ Enable libevent task queues on platforms that support it.
 
 ---
 
+{{< adsense-feed >}}
+
 `rtc_include_pulse_audio` = `false`
 
 Excluded in Chromium since its prerequisites don't require Pulse Audio.
@@ -325,9 +340,9 @@ Excluded in Chromium since its prerequisites don't require Pulse Audio.
 
 Chromium uses its own IO handling, so the internal ADM is only built for standalone WebRTC.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE
-```
+{{< / highlight >}}
 
 ---
 
@@ -335,9 +350,9 @@ Chromium uses its own IO handling, so the internal ADM is only built for standal
 
 Set this to true to enable the avx2 support in webrtc.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_ENABLE_AVX2
-```
+{{< / highlight >}}
 
 ---
 
@@ -345,9 +360,9 @@ Set this to true to enable the avx2 support in webrtc.
  
 Set this to true to build the unit tests. Disabled when building with Chromium or Mozilla.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_NON_STATIC_TRACE_EVENT_HANDLERS 1
-```
+{{< / highlight >}}
 
 ---
 
@@ -357,15 +372,17 @@ Set this to false to skip building code that also requires X11 extensions such a
 
 ---
 
+{{< adsense-feed >}}
+
 `rtc_disable_logging` = `false`
 
 Set this to true to fully remove logging from WebRTC.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #ifdef RTC_DISABLE_LOGGING
 #undef RTC_DISABLE_LOGGING
 #endif
-```
+{{< / highlight >}}
 
 ---
 
@@ -373,11 +390,11 @@ Set this to true to fully remove logging from WebRTC.
 
 Set this to true to disable trace events.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #ifdef RTC_DISABLE_TRACE_EVENTS
 #undef RTC_DISABLE_TRACE_EVENTS
 #endif
-```
+{{< / highlight >}}
 
 ---
 
@@ -385,9 +402,9 @@ Set this to true to disable trace events.
    
 Set this to true to disable detailed error message and logging for RTC_CHECKs.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define RTC_DISABLE_CHECK_MSG
-```
+{{< / highlight >}}
 
 ---
 
@@ -395,23 +412,25 @@ Set this to true to disable detailed error message and logging for RTC_CHECKs.
 
 Set this to true to disable webrtc metrics.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #ifdef RTC_DISABLE_METRICS
 #undef RTC_DISABLE_METRICS
 #endif
-```
+{{< / highlight >}}
 
 ---
+
+{{< adsense-feed >}}
 
 `rtc_exclude_transient_suppressor` = `false`
 
 Set this to true to exclude the transient suppressor in the audio processing module from the build.
 
-```
+{{< highlight bash "lineNos=false" >}}
 #ifdef WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR
 #undef WEBRTC_EXCLUDE_TRANSIENT_SUPPRESSOR
 #endif
-```
+{{< / highlight >}}
 
 ---
 
@@ -425,59 +444,63 @@ Desktop capturer is supported only on Windows, OSX and Linux.
 
 `is_ios` = current_os == `ios`
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_IOS
 #define WEBRTC_MAC
-```
+{{< / highlight >}}
 
 ---
 
 `is_mac` = current_os == `mac`
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_MAC
-```
+{{< / highlight >}}
 
 ---
 
 `is_posix` = !`is_win` && !`is_fuchsia`
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_POSIX
-```
+{{< / highlight >}}
 
 ---
 
+{{< adsense-feed >}}
+
 current_cpu == `arm64`
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_ARCH_ARM64
 #define WEBRTC_HAS_NEON
-```
+{{< / highlight >}}
 
 ---
 
 current_cpu == `arm`
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_ARCH_ARM
 #define WEBRTC_HAS_NEON
-```
+{{< / highlight >}}
 
 ---
 
 arm_version >= `7`
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_ARCH_ARM_V7
-```
+{{< / highlight >}}
 
 ---
 
 arm_use_neon == `true`
 
-```
+{{< highlight bash "lineNos=false" >}}
 #define WEBRTC_HAS_NEON
-```
+{{< / highlight >}}
 
 ---
+
+{{< adsense-feed >}}

@@ -1,0 +1,79 @@
+baseURL: 'https://www.rfxsoftware.com'
+languageCode: en-us
+title: iOS Engineering
+paginate: 5
+publishDir: docs
+theme: PaperModX
+
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+pygmentsUseClasses: true
+
+googleAnalytics: G-4FC8CCB4QQ
+
+params:
+  env: staging
+  #env: production # to enable google analytics, opengraph, twitter-cards and schema.
+  adsensePublisher: ca-pub-3910106600267992
+  adsenseInArticleSlot: '8570155625'
+  avatar: ronny@rfxsoftware.com
+  name: RonnyF
+  bio: iOS Engineer
+  DateFormat: "January 2, 2006"
+  defaultTheme: auto # dark, light
+  disableThemeToggle: false
+
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: false
+  disableSpecial1stPost: false
+  disableScrollToTop: false
+  comments: false
+  hidemeta: false
+  hideSummary: false
+  showtoc: false
+  tocopen: false
+
+  TocSide: 'left'  # or 'right'
+
+# analytics:
+#   google:
+#     SiteVerificationTag: "XYZabc"
+
+markup:
+  highlight:
+    codeFences: true
+    guessSyntax: true
+    hl_Lines: ''
+    lineNoStart: 10
+    lineNos: true
+    lineNumbersInTable: false
+    tabWidth: 4
+    noClasses: true
+    style: monokai
+
+# module:
+#   mounts:
+#     - source: content
+#       target: content
+#     - source: static
+#       target: static
+#     - source: layouts
+#       target: layouts
+#     - source: data
+#       target: data
+#     - source: assets
+#       target: assets
+#     - source: i18n
+#       target: i18n
+#     - source: archetypes
+#       target: archetypes
+#   imports:
+#     - disable: false
+#       path: github.com/hugomods/search
+#     - disable: false
+#       path: github.com/hugomods/images

@@ -7,6 +7,8 @@ _build:
 ---
 [Back to Article]({{< ref "/posts/webrtc-xc/main#corertc">}})
 
+{{< adsense-feed >}}
+
 - api/adaptation/resource.cc
 - api/audio_codecs/audio_codec_pair_id.cc
 - api/audio_codecs/audio_decoder.cc

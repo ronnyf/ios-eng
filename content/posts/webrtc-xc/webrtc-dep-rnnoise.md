@@ -17,3 +17,5 @@ RNNoise is a noise suppression library based on a recurrent neural network.
 A new Swift package was created to build static and dynamic libraries with Xcode / SwiftPM.
 
 https://github.com/ronnyf/rnnoise/blob/release/webrtc/Package.swift
+
+{{< adsense-feed >}}

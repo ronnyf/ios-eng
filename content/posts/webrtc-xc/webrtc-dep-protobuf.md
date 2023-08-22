@@ -19,3 +19,5 @@ can learn more about it in [protobuf's documentation](https://protobuf.dev).
 A new Swift package was created to build static and dynamic libraries with Xcode / SwiftPM.
 
 https://github.com/ronnyf/protobuf/blob/release/webrtc/Package.swift
+
+{{< adsense-feed >}}

@@ -20,3 +20,5 @@ and the library is in libsrtp2.a (after compilation).
 A new Swift package was created to build static and dynamic libraries with Xcode / SwiftPM.
 
 https://github.com/ronnyf/libsrtp/blob/release/webrtc/Package.swift
+
+{{< adsense-feed >}}

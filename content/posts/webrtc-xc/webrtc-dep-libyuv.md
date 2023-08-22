@@ -17,3 +17,5 @@ _build:
 A new Swift package was created to build static and dynamic libraries with Xcode / SwiftPM.
 
 https://github.com/ronnyf/libyuv/blob/release/webrtc/Package.swift
+
+{{< adsense-feed >}}

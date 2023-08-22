@@ -17,3 +17,5 @@ The WebM VP8/VP9 Codec SDK.
 A new Swift package was created to build static and dynamic libraries with Xcode / SwiftPM.
 
 https://github.com/ronnyf/libvpx/blob/release/webrtc/Package.swift
+
+{{< adsense-feed >}}

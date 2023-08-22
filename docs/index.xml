@@ -4,11 +4,6 @@
     <title>iOS Engineering</title>
     <link>https://www.rfxsoftware.com/</link>
     <description>Recent content on iOS Engineering</description>
-    <image>
-      <title>iOS Engineering</title>
-      <url>https://www.rfxsoftware.com</url>
-      <link>https://www.rfxsoftware.com</link>
-    </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 20 Aug 2023 18:00:00 -0700</lastBuildDate><atom:link href="https://www.rfxsoftware.com/index.xml" rel="self" type="application/rss+xml" />
@@ -19,6 +14,265 @@
       
       <guid>https://www.rfxsoftware.com/posts/webrtc-xc/main/</guid>
       <description>Introduction WebRTC (Web Real-Time Communication) is a powerful open-source technology that enables real-time communication capabilities in web and mobile applications. While WebRTC is well-supported in web browsers, incorporating it into iOS applications often requires (re)building a binary framework to ensure seamless integration and improved performance. In this article, we will provide a comprehensive step-by-step guide on how to integrate WebRTC into any iOS/macOS application and building it from source entirely in Xcode.</description>
+      <content:encoded><![CDATA[<h2 id="introduction">Introduction</h2>
+<p>WebRTC (Web Real-Time Communication) is a powerful open-source technology that enables real-time communication capabilities in web and mobile applications. While WebRTC is well-supported in web browsers, incorporating it into iOS applications often requires (re)building a binary framework to ensure seamless integration and improved performance. In this article, we will provide a comprehensive step-by-step guide on how to integrate WebRTC into any iOS/macOS application and building it from source entirely in Xcode.</p>
+<p>Wait! What? Why?</p>
+<p>But one can build this easily as a framework with Google&rsquo;s depot tools, you might say. That is entirely correct. It might even be more convenient to run someone&rsquo;s clever build script, grab your favorite (non)cafeinated drink and voila. But what if maybe there&rsquo;s another way?</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3910106600267992"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3910106600267992"
+     data-ad-slot="8570155625"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2 id="motivation">Motivation</h2>
+<p>The main motiviation for this endeavor is to create the ability for developers to not only live-debug into the framework with familiar tools (Xcode, Instruments) but to also build a greater variety of targets. This then opens up a lot more opportunities to optimize and modernize some parts of WebRTC for iOS. With Swift-C++ interopability coming with the Swift 5.9 toolchain, some very interesting engineering might happen that could yield benefits not only for Apple platforms. Let&rsquo;s get started.</p>
+<h2 id="creating-an-xcode-project-for-webrtc">Creating an Xcode project for WebRTC</h2>
+<p>A basic familiarity with Xcode and how to create projects, targets and their basic configuration is assumed.</p>
+<p>The final product is available in <a href="https://github.com/ronnyf/WebRTC.git" target="_blank" rel="noopener">this github respsitory</a></p>
+<h3 id="obtaining-the-sources">Obtaining the sources</h3>
+<p>Refer to <a href="https://webrtc.github.io/webrtc-org/native-code/ios/" title="Google&#39;s instructions" target="_blank" rel="noopener">Google&rsquo;s instructions</a> for fetching the WebRTC sources. At the time of writing this, the full sync would take around <strong>20 GB</strong> of disk space. In contrast, the &ldquo;Built-With-Xcode&rdquo; variant occupies <strong>788 MB</strong>.</p>
+<h3 id="creating-the-targets">Creating the targets</h3>
+<p>While Google&rsquo;s build configuration defines several dozens of individual targets that are very neatly organized into an efficient dependency graph, this is not something that is going to be replicated for the Xcode build. The build graph is something that Xcode manages internally. Rather than taking on those responsibilities manually, Xcode is entrusted with this. Please refer to the paragraph about <a href="#build-performance">build performance</a> for a breakdown of build times of Xcode and Ninja.</p>
+<p>The targets that are being created are the following:</p>
+<ul>
+<li>WebRTC (framework)</li>
+<li>libWebRTC (static library)</li>
+<li>CoreRTC (static library)</li>
+</ul>
+<h4 id="corertc">CoreRTC</h4>
+<p>The <em>CoreRTC</em> static library will contain all objects (minus the unit tests and mock objects) from the following folders:</p>
+<ul>
+<li>api</li>
+<li>audio</li>
+<li>call</li>
+<li>common_audio</li>
+<li>common_video</li>
+<li>logging</li>
+<li>media</li>
+<li>modules</li>
+<li>net</li>
+<li>p2p</li>
+<li>pc</li>
+<li>resources</li>
+<li>rtc_base</li>
+<li>rtc_tools</li>
+<li>stats</li>
+<li>system_wrappers</li>
+<li>test</li>
+<li>testing</li>
+<li>third_party*</li>
+<li>video</li>
+</ul>
+<p><a href="/posts/webrtc-xc/webrtc-core-sources/">All Source Files</a></p>
+<p>Google engineers follow the pattern of storing header files near the location of the source files and refer to them by thir relative path to the source root. There should be a name for this 🤷‍♂️.</p>
+<p>Setting the <code>User Header Search Paths</code> to <code>$(SRCROOT)</code> in Xcode&rsquo;s <code>Build Settings</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">USER_HEADER_SEARCH_PATHS</span> <span class="o">=</span> <span class="k">$(</span>SRCROOT<span class="k">)</span></span></span></code></pre></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3910106600267992"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3910106600267992"
+     data-ad-slot="8570155625"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h4 id="libwebrtc">libWebRTC</h4>
+<p>The static <code>WebRTC</code> library links the <code>CoreRTC</code> static library and builds the following sources.</p>
+<p><a href="/posts/webrtc-xc/webrtc-lib-sources/">All Source Files</a></p>
+<p>Additionally, the public headers need to be made available for other libraries to link this one. This is achieved with a <code>Copy Files Phase</code> where all relevent headers are copied to the <code>Products Directory</code> at subpath <code>include/WebRTC</code>.</p>
+<p><a href="/posts/webrtc-xc/webrtc-lib-headers/">All Header Files</a></p>
+<p>THe following SDK classes / protocols / objects were moved into the <code>modules/audio_device/ios/components/audio</code> location because the <code>audio_device_ios.h</code> header is included in <code>modules/audio_device/audio_device_impl.cc</code>. The change was introduced with <a href="https://webrtc.googlesource.com/src/&#43;/8d95e3b2114e25977af93599a32b941d4e627364" target="_blank" rel="noopener">this commit</a>. While this probably made sense when using <code>Blaze/Bazel</code>. In this configuration here, the SDK libraries are linking the core library and this is a unidirectional path. In iOS SDK terms, this would be something like <code>QuartzCore</code> linking <code>UIKit</code>.</p>
+<p>So this approach has to be reversed but without making code changes. This can easily be achieved by re-exporting the symbols:</p>
+<ul>
+<li>RTCAudioDevice</li>
+<li>RTCAudioSession</li>
+<li>RTCAudioSessionDelegate</li>
+<li>RTCAudioSessionActivationDelegate</li>
+<li>RTCAudioSessionConfiguration</li>
+</ul>
+<p>from <code>CoreRTC</code> in the <code>libWebRTC</code> and the <code>WebRTC (framework)</code> targets. One minor issue is that the implementation of those references SDK includes, such as <code>RTCMacros.h</code> and <code>RTCLogging.h</code>.</p>
+<p>A new header is created and added to the <code>rtc_base</code> directory: <strong>rtc_export_bridge.h</strong>. The content borrows from those defines that are declared in the SDK.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-objective-c" data-lang="objective-c"><span class="line"><span class="ln">10</span><span class="cl">    <span class="cp">#ifndef rtc_export_bridge_h
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="cp"></span>    <span class="cp">#define rtc_export_bridge_h
+</span></span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">    <span class="cp">#include</span> <span class="cpf">&#34;rtc_base/system/rtc_export.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">    <span class="cp">#ifndef RTC_OBJC_TYPE
+</span></span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="cp"></span>    <span class="cp">#define RTC_OBJC_TYPE(t) t
+</span></span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="cp"></span>    <span class="cp">#endif
+</span></span></span><span class="line"><span class="ln">18</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">    <span class="cp">#ifndef RTC_OBJC_EXPORT
+</span></span></span><span class="line"><span class="ln">20</span><span class="cl"><span class="cp"></span>    <span class="cp">#define RTC_OBJC_EXPORT RTC_EXPORT
+</span></span></span><span class="line"><span class="ln">21</span><span class="cl"><span class="cp"></span>    <span class="cp">#endif
+</span></span></span><span class="line"><span class="ln">22</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">23</span><span class="cl">    <span class="cp">#ifndef RTC_EXTERN
+</span></span></span><span class="line"><span class="ln">24</span><span class="cl"><span class="cp"></span>    <span class="cp">#if defined(__cplusplus)
+</span></span></span><span class="line"><span class="ln">25</span><span class="cl"><span class="cp"></span>    <span class="cp">#define RTC_EXTERN extern &#34;C&#34; RTC_OBJC_EXPORT
+</span></span></span><span class="line"><span class="ln">26</span><span class="cl"><span class="cp"></span>    <span class="cp">#else
+</span></span></span><span class="line"><span class="ln">27</span><span class="cl"><span class="cp"></span>    <span class="cp">#define RTC_EXTERN extern RTC_OBJC_EXPORT
+</span></span></span><span class="line"><span class="ln">28</span><span class="cl"><span class="cp"></span>    <span class="cp">#endif
+</span></span></span><span class="line"><span class="ln">29</span><span class="cl"><span class="cp"></span>    <span class="cp">#endif
+</span></span></span><span class="line"><span class="ln">30</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">31</span><span class="cl">    <span class="cp">#ifndef RTC_FWD_DECL_OBJC_CLASS
+</span></span></span><span class="line"><span class="ln">32</span><span class="cl"><span class="cp"></span>    <span class="cp">#ifdef __OBJC__
+</span></span></span><span class="line"><span class="ln">33</span><span class="cl"><span class="cp"></span>    <span class="cp">#define RTC_FWD_DECL_OBJC_CLASS(classname) @class classname
+</span></span></span><span class="line"><span class="ln">34</span><span class="cl"><span class="cp"></span>    <span class="cp">#else
+</span></span></span><span class="line"><span class="ln">35</span><span class="cl"><span class="cp"></span>    <span class="cp">#define RTC_FWD_DECL_OBJC_CLASS(classname) typedef struct objc_object classname
+</span></span></span><span class="line"><span class="ln">36</span><span class="cl"><span class="cp"></span>    <span class="cp">#endif
+</span></span></span><span class="line"><span class="ln">37</span><span class="cl"><span class="cp"></span>    <span class="cp">#endif</span></span></span></code></pre></div></p>
+<p>This allows the symbols that are already annotated with <code>RTC_OBJC_EXPORT</code> do be re-exported. Another small caveat&hellip; the <code>RTCAudioDevice.h</code> header must include the newly defined <code>rtc_export_bridge.h</code> header. This include needs to be hidden from the public interface however. For that purpose, the <code>reexported</code> folder was created, containing the original header files that are part of the public API definition. The actual headers are hidden from the public interfaces of <code>libWebRTC</code> and <code>WebRTC</code>.</p>
+<h4 id="webrtc">WebRTC</h4>
+<p>The framework target builds a similar set of sources as the static library, the public and internal headers however are organized using Xcode&rsquo;s <code>Build Phases</code> configuration.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3910106600267992"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3910106600267992"
+     data-ad-slot="8570155625"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h4 id="defines">Defines</h4>
+<p>Looking at the <code>BUILD.gn</code> and <code>webrtc.gni</code> file(s), there are a lot of preprocessor macro definitions that seem extremely relevant. There are several options to provide those to the build system. A <code>config.h</code> file seems to be generally used for provisioning relevant macros.</p>
+<p><a href="/posts/webrtc-xc/webrtc_config/">Default configuration values for iOS builds</a></p>
+<p>Adding a new header file to the <code>rtc_base</code> directory: <code>rtc_base/rtc_defines.h</code>.</p>
+<p><a href="/posts/webrtc-xc/webrtc_defines/">Content of <em>rtc_defines.h</em></a></p>
+<p>In order to take advantage of this configuration, the header needs to be included in a lot of source files. As a rule of thumb, if a <code>#define</code> is checked, the include statement <code>#include &quot;rtc_base/rtc_defines.h&quot;</code> should be added.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-objective-c" data-lang="objective-c"><span class="line"><span class="ln">10</span><span class="cl"><span class="cp">#ifndef COMMON_AUDIO_FIR_FILTER_AVX2_H_
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="cp">#define COMMON_AUDIO_FIR_FILTER_AVX2_H_
+</span></span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line hl"><span class="ln">13</span><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;rtc_base/rtc_defines.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line hl"><span class="ln">15</span><span class="cl"><span class="cp">#if defined(WEBRTC_ARCH_X86_FAMILY) &amp;&amp; defined(WEBRTC_HAS_AVX2)
+</span></span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stddef.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="ln">18</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="ln">20</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;common_audio/fir_filter.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="ln">22</span><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;rtc_base/memory/aligned_malloc.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="ln">23</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">24</span><span class="cl"><span class="n">namespace</span> <span class="n">webrtc</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln">25</span><span class="cl">
+</span></span><span class="line"><span class="ln">26</span><span class="cl"><span class="k">class</span> <span class="nl">FIRFilterAVX2</span> <span class="p">:</span> <span class="n">public</span> <span class="n">FIRFilter</span> <span class="p">{...}</span>
+</span></span><span class="line"><span class="ln">27</span><span class="cl">
+</span></span><span class="line"><span class="ln">28</span><span class="cl"><span class="p">}</span>  <span class="c1">// namespace webrtc
+</span></span></span><span class="line"><span class="ln">29</span><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="ln">30</span><span class="cl"><span class="cp">#endif </span><span class="c1">// defined(WEBRTC_ARCH_X86_FAMILY) &amp;&amp; defined(WEBRTC_HAS_AVX2)
+</span></span></span><span class="line"><span class="ln">31</span><span class="cl"><span class="c1"></span><span class="cp">#endif  // COMMON_AUDIO_FIR_FILTER_AVX2_H_</span></span></span></code></pre></div>
+<p>On a platform without <code>AVX2</code> support, this would be compiled into an (empty) <code>.o</code> file, which adds a small amount of overhead but should be stripped out of any optimized binary that is being distributed.</p>
+<h4 id="generated-files">Generated Files</h4>
+<h5 id="protobufs">Protobufs</h5>
+<p>Use your favorite <code>protoc</code> build, or try out <a href="https://github.com/ronnyf/protobuf/tree/release/webrtc" target="_blank" rel="noopener">this one</a> that is part of WebRTC&rsquo;s dependency list. Executable <code>protoc</code> binaries can be built with SwiftPM for iOS/macOS on arm64/x86_64.</p>
+<h5 id="registered-field-trials">Registered Field Trials</h5>
+<p>The <code>registered_field_trials.h</code> file is generated by a script during Google&rsquo;s build process. Depending on the user&rsquo;s needs, the individual variants could be added manually to Xcode.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-objective-c" data-lang="objective-c"><span class="line"><span class="ln">10</span><span class="cl"><span class="c1">// This file was automatically generated. Do not edit.
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="cp">#ifndef GEN_REGISTERED_FIELD_TRIALS_H_
+</span></span></span><span class="line"><span class="ln">13</span><span class="cl"><span class="cp">#define GEN_REGISTERED_FIELD_TRIALS_H_
+</span></span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;absl/strings/string_view.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="n">namespace</span> <span class="n">webrtc</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln">18</span><span class="cl">
+</span></span><span class="line"><span class="ln">19</span><span class="cl"><span class="kr">inline</span> <span class="n">constexpr</span> <span class="n">absl</span><span class="o">::</span><span class="n">string_view</span> <span class="n">kRegisteredFieldTrials</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln">20</span><span class="cl">    <span class="s">&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="ln">22</span><span class="cl">
+</span></span><span class="line"><span class="ln">23</span><span class="cl"><span class="p">}</span>  <span class="c1">// namespace webrtc
+</span></span></span><span class="line"><span class="ln">24</span><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="ln">25</span><span class="cl"><span class="cp">#endif  </span><span class="c1">// GEN_REGISTERED_FIELD_TRIALS_H_
+</span></span></span></code></pre></div><p>For that purpose, a dedicated <code>generated</code> folder is created and relevant headers / sources are copied into it.</p>
+<h3 id="third-party-dependencies">Third Party Dependencies</h3>
+<p>The following repositories were forked from their origin and a <code>Package.swift</code> file was added to allow building static and dynamic libraries with Xcode / SwiftPM. The branch <code>release/webrtc</code> has been created where the package definiton is available and also potential (required/useful) changes were made.</p>
+<ul>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-absl/">Abseil-C++</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-crc32c/">CRC32c</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-boringssl/">BoringSSL</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-jsoncpp/">JSONcpp</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-libsrtp/">libSRTP</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-libvpx/">libVPX</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-libyuv/">libYuv</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-libopus/">OPUS</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-protobuf/">Protobuf</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-rnnoise/">RNNoise</a></p>
+</li>
+<li>
+<p><a href="/posts/webrtc-xc/webrtc-dep-utf8range/">utf8_range</a></p>
+</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3910106600267992"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3910106600267992"
+     data-ad-slot="8570155625"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2 id="build-issues">Build issues</h2>
+<p>Not considering implicit <code>int32</code> to <code>int64</code> conversions, Xcode has revealed a small <a href="/posts/webrtc-xc/webrtc-issues/">list of warnings</a></p>
+<h2 id="build-performance">Build performance</h2>
+<p>All measurements were taken on a 2021 16&quot; MacBook Pro M1-Max running macOS Ventura 13.4.1 (c), build: 22F770820d</p>
+<p>The WebRTC framework build with <code>Ninja</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">10</span><span class="cl">time ninja -C out/ios_64 framework_objc
+</span></span><span class="line"><span class="ln">11</span><span class="cl">ninja: Entering directory `out/ios_64&#39;
+</span></span><span class="line"><span class="ln">12</span><span class="cl">[3640/3640] STAMP obj/sdk/framework_objc.stamp
+</span></span><span class="line"><span class="ln">13</span><span class="cl">ninja -C out/ios_64 framework_objc  892.88s user 189.84s system 623% cpu 2:53.54 total
+</span></span></code></pre></div><p>Three Xcode builds using the <code>Product &gt; Perform Action &gt; Build with Timing Summary</code> were done with the following results:</p>
+<p>1: Build succeeded    7/26/23, 10:40 AM    <code>171.6 seconds</code></p>
+<p>2: Build succeeded    7/26/23, 10:43 AM    <code>192.5 seconds</code></p>
+<p>3: Build succeeded    7/26/23, 11:00 AM    <code>187.9 seconds</code></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Judging from those preliminary (and unarguably unverified) results, the following allegations are made:</p>
+<ul>
+<li>The Xcode build of the WebRTC iOS framework (arm64 target) using the methods described in this article is performed in similar time compared to the <code>Ninja</code> build, <a href="https://webrtc.github.io/webrtc-org/native-code/ios/" target="_blank" rel="noopener">described by Google</a>.</li>
+<li>The build graph created by <code>xcodebuild</code> is <strong>NOT</strong> less efficient than the (allegedly) manually created and highly optimized build graph produced by Google&rsquo;s <code>Bazel/Blaze</code> toolchain.</li>
+<li>The complexity of managing all files in the build targets is significantly lower (lower is better) with Xcode.</li>
+<li>There are no performance concerns managing several thousand source and header files with Xcode, when run on an APFS file system on a current generation SSD drive. It is reasonable to assume that the same statement would not apply when the Xcode project file is located in a user space mounted network file system.</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3910106600267992"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-3910106600267992"
+     data-ad-slot="8570155625"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+]]></content:encoded>
     </item>
     
   </channel>
